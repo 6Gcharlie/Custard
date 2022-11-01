@@ -1,9 +1,10 @@
+# - Required modules for custard.py
 import pygame
 from OpenGL.GL import *
 from pygame.locals import *
 
-# - Configure the OpenGL settings
-def ConfigureOpenGLSettings(info):
+def Custard_OpenGL_Configuration(info):
+    # - Configure the OpenGL window
     glViewport(0, 0, info.current_w, info.current_h)
     glDepthRange(0, 1)
     glMatrixMode(GL_PROJECTION)
@@ -18,9 +19,10 @@ def ConfigureOpenGLSettings(info):
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
     glEnable(GL_BLEND)
 
-# - Function to convert a PyGame Surface to an OpenGL Texture
+
 # - TODO: Optimise this? Not all these operations might be necessary
-def SurfaceToTexture(pygame_surface, texID):
+def Custard_Surface_To_Texture(pygame_surface, texID):
+    # - Function to convert a Pygame Surface to an OpenGL Texture
     rgb_surface = pygame.image.tostring( pygame_surface, 'RGB')
     glBindTexture(GL_TEXTURE_2D, texID)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
@@ -32,7 +34,9 @@ def SurfaceToTexture(pygame_surface, texID):
     glGenerateMipmap(GL_TEXTURE_2D)
     glBindTexture(GL_TEXTURE_2D, 0)
 
-def OpenGLDrawToScreen(offscreen_surface, texID):
+
+
+def Custard_OpenGL_Blit(pygame_surface, texID):
     # - Prepare to render the texture-mapped rectangle
     glClear(GL_COLOR_BUFFER_BIT)
     glLoadIdentity()
@@ -40,7 +44,7 @@ def OpenGLDrawToScreen(offscreen_surface, texID):
     glEnable(GL_TEXTURE_2D)
 
     # - Turn the 'offscreen_surface' into a OpenGL Texture
-    SurfaceToTexture(offscreen_surface, texID)
+    Custard_Surface_To_Texture(pygame_surface, texID)
     glBindTexture(GL_TEXTURE_2D, texID)
     glBegin(GL_QUADS)
     glTexCoord2f(0, 0); glVertex2f(-1, 1)
