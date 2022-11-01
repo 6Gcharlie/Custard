@@ -14,6 +14,17 @@ pygame.display.set_mode((window_width, window_height), OPENGL | DOUBLEBUF, vsync
 pygame.display.set_caption('Stone heart')
 info = pygame.display.Info()
 
+# - Game library
+game = {
+        'running': True, 'FPS': 60,
+        'paused': False, 'loop': 'splashscreen',
+        'aspect ratio': '16:9', 'clock': 'standard',
+        'volume': {
+                   'master': 100, 'music': 100,
+                   'sound effects': 100, 'voices': 100
+                  }
+       }
+
 # - Create colour tuples
 MIDNIGHT = (  15,   0, 100 )
 BUTTER   = ( 255, 245, 100 )
@@ -56,12 +67,10 @@ clock = pygame.time.Clock()
 offscreen_surface = pygame.Surface((info.current_w / 2, info.current_h / 2))
 text_font = pygame.font.Font( None, 30 )
 
-# - Game loop
-game_running = False
-while not game_running:
+while game['running']:
     for event in pygame.event.get():
         if event.type == QUIT:
-            game_running = True
+            game['running'] = False
 
     # - Apply all normal pygame functions to the offscreen_surface
     offscreen_surface.fill( MIDNIGHT )
@@ -87,6 +96,10 @@ while not game_running:
 
     # - Update the new surface at the framerate included
     pygame.display.flip()
-    clock.tick_busy_loop(60)
+
+    if (game['clock'] == 'busy'):
+        clock.tick_busy_loop(game['FPS'])
+    else:
+        clock.tick(game['FPS'])
 
 pygame.quit()
