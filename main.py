@@ -1,5 +1,6 @@
 # - Import all necessary modules
 import pygame
+import os
 from OpenGL.GL import *
 from pygame.locals import *
 from custard import *
@@ -46,7 +47,9 @@ pygame.display.set_caption('Stone heart')
 
 
 # - Create colour RGB values
-MIDNIGHT = [ 15,   0, 100]
+MIDNIGHT = [ 48,  44,  46]
+SLATE    = [ 90,  83,  83]
+MARBLE   = [125, 113, 122]
 BUTTER   = [255, 245, 100]
 
 
@@ -56,13 +59,16 @@ clock = pygame.time.Clock()
 
 
 
-# - Make the 'offscreen_surface' for Pygame blits
-offscreen_surface = pygame.Surface((info.current_w / 2, info.current_h / 2))
+# - Create basic font object
+text_font = pygame.font.Font(os.path.join('data/fonts/pcsenior.ttf'), 16)
+stats_title = text_font.render('Developer Stats', True, MARBLE)
+stats_break = text_font.render('---------------', True, MARBLE)
 
+# - Make the 'offscreen_surface' for Pygame blits
 if (game['display']['type'] == 'OpenGL'):
-    text_font = pygame.font.Font(None, 30)
+    offscreen_surface = pygame.Surface((info.current_w, info.current_h))
 else:
-    text_font = pygame.font.Font(None, 60)
+    offscreen_surface = pygame.Surface((info.current_w / 2, info.current_h / 2))
 
 
 
@@ -70,21 +76,33 @@ if (__name__ == '__main__'):
 
     while game['running']:
         for event in pygame.event.get():
-            if event.type == QUIT:
-                game['running'] = False
+            match event.type:
+                case pygame.QUIT:
+                    game['running'] = False
+                case pygame.KEYDOWN:
+                    match event.key:
+                        case 27:
+                            game['running'] = False
+                        case 96:
+                            if (game['dev console']):
+                                game['dev console'] = False
+                            else:
+                                game['dev console'] = True
+                        case _:
+                            print(event.key)
 
 
 
         # - Apply all normal pygame functions to the offscreen_surface
-        offscreen_surface.fill(MIDNIGHT)
-        words = text_font.render('FPS: ' + str(clock.get_fps()), True, BUTTER)
+        offscreen_surface.fill(SLATE)
+        pygame.draw.rect(offscreen_surface, MARBLE, [100, 100, 20, 20])
 
-        if (game['display']['type'] == 'OpenGL'):
-            offscreen_surface.blit(words, (10, 10) )
-            pygame.draw.rect(offscreen_surface, BUTTER, [50, 50, 10, 10])
-        else:
-            offscreen_surface.blit(words, (20, 20) )
-            pygame.draw.rect(offscreen_surface, BUTTER, [100, 100, 20, 20])
+        if (game['dev console']):
+            pygame.draw.rect(offscreen_surface, MIDNIGHT, [0, 0, info.current_w / 4, info.current_h])
+            frames_surface = text_font.render('FPS: ' + str(round(clock.get_fps(), 1)), True, MARBLE)
+            offscreen_surface.blit(stats_title, (4, 4))
+            offscreen_surface.blit(stats_break, (4, 24))
+            offscreen_surface.blit(frames_surface, (4, 44))
 
 
 
