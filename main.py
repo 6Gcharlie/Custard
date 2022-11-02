@@ -62,7 +62,6 @@ BUTTER   = [255, 245, 100]
 
 # - Create basic font class and font object
 text_font = pygame.font.Font(os.path.join(file_path + 'fonts/pcsenior.ttf'), 16)
-
 stats_title    = text_font.render('Developer Stats', True, MARBLE)
 stats_break    = text_font.render('---------------', True, MARBLE)
 stats_rendered = text_font.render('Surface: ' + game['display']['type'], True, MARBLE)
