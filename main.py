@@ -45,9 +45,9 @@ pygame.display.set_caption('Stone heart')
 
 
 
-# - Create colours
-MIDNIGHT = (  15,   0, 100 )
-BUTTER   = ( 255, 245, 100 )
+# - Create colour RGB values
+MIDNIGHT = [ 15,   0, 100]
+BUTTER   = [255, 245, 100]
 
 
 
@@ -74,16 +74,18 @@ if (__name__ == '__main__'):
                 game['running'] = False
 
 
+
         # - Apply all normal pygame functions to the offscreen_surface
         offscreen_surface.fill(MIDNIGHT)
         words = text_font.render('FPS: ' + str(clock.get_fps()), True, BUTTER)
-        
+
         if (game['display']['type'] == 'OpenGL'):
             offscreen_surface.blit(words, (10, 10) )
             pygame.draw.rect(offscreen_surface, BUTTER, [50, 50, 10, 10])
         else:
             offscreen_surface.blit(words, (20, 20) )
             pygame.draw.rect(offscreen_surface, BUTTER, [100, 100, 20, 20])
+
 
 
         # - Prepare and draw the surface using OpenGL if necessary
@@ -94,7 +96,6 @@ if (__name__ == '__main__'):
             offscreen_surface = pygame.transform.scale(offscreen_surface, [game['display']['width'], game['display']['height']])
             window.blit(offscreen_surface, [0, 0])
             pygame.display.update()
-
 
         # - Allow the screen to be updated
         if (game['clock'] == 'busy'):
