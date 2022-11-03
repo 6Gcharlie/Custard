@@ -18,7 +18,7 @@ game = {
         'clock': 'busy', 'dev console': False,
         'display': {
                     'aspect ratio': '16:9', 'width': 1280,
-                    'height': 720, 'type': 'SDL',
+                    'height': 720, 'type': 'OpenGL',
                     'vsync': True, 'flags': DOUBLEBUF
                    },
         'volume': {
@@ -62,14 +62,23 @@ BUTTER   = [255, 245, 100]
 
 # - Create basic font class and font object
 text_font = pygame.font.Font(os.path.join(file_path + 'fonts/pcsenior.ttf'), 16)
-stats_title    = text_font.render('Developer Stats', True, MARBLE)
-stats_break    = text_font.render('---------------', True, MARBLE)
-stats_rendered = text_font.render('Surface: ' + game['display']['type'], True, MARBLE)
-stats_clock    = text_font.render('Clock: ' + game['clock'], True, MARBLE)
-stats_aspect   = text_font.render('Aspect ratio: ' + game['display']['aspect ratio'], True, MARBLE)
-stats_vsync    = text_font.render('Vsync :' + str(game['display']['vsync']), True, MARBLE)
 
+stats = []
+stats.append(text_font.render('Developer Stats', True, MARBLE))
+stats.append(text_font.render('---------------', True, MARBLE))
+stats.append(text_font.render('Surface:      ' + game['display']['type'], True, MARBLE))
+stats.append(text_font.render('Clock:        ' + game['clock'], True, MARBLE))
+stats.append(text_font.render('Aspect ratio: ' + game['display']['aspect ratio'], True, MARBLE))
+stats.append(text_font.render('Vsync :       ' + str(game['display']['vsync']), True, MARBLE))
+stats.append(text_font.render('Width:        ' + str(game['display']['width']), True, MARBLE))
+stats.append(text_font.render('Height:       ' + str(game['display']['height']), True, MARBLE))
 
+box_x = 100
+
+circle_x = info.current_w / 2
+circle_y = info.current_h / 2
+circle_loop = 'down'
+gravity = 1
 
 # - Main game loop
 if (__name__ == '__main__'):
@@ -95,23 +104,47 @@ if (__name__ == '__main__'):
 
 
 
+
+        """ =-=-= Logic =-=-= """
+
+        if (gravity == 12):
+            circle_loop = 'up'
+        
+        if (gravity == 0):
+            circle_loop = 'down'
+
+        if (circle_loop == 'down'):
+            circle_y += gravity
+            gravity += 1
+        else:
+            circle_y -= gravity
+            gravity -= 1
+
+
+
+
         """ =-=-= Draw =-=-= """
 
         # - Apply all normal pygame functions to the offscreen_surface
         offscreen_surface.fill(SLATE)
-        pygame.draw.rect(offscreen_surface, MARBLE, [100, 100, 20, 20])
+        pygame.draw.circle(offscreen_surface, MARBLE, [circle_x, circle_y], 30)
 
         # - Draw dev console stats if active
         if (game['dev console']):
-            pygame.draw.rect(offscreen_surface, MIDNIGHT, [0, 0, info.current_w / 4, info.current_h])
-            frames_surface = text_font.render('FPS: ' + str(round(clock.get_fps(), 1)), True, MARBLE)
-            offscreen_surface.blit(stats_title, (4, 4))
-            offscreen_surface.blit(stats_break, (4, 24))
-            offscreen_surface.blit(frames_surface, (4, 44))
-            offscreen_surface.blit(stats_rendered, (4, 64))
-            offscreen_surface.blit(stats_clock, (4, 84))
-            offscreen_surface.blit(stats_aspect, (4, 104))
-            offscreen_surface.blit(stats_vsync, [4, 124])
+            pygame.draw.rect(offscreen_surface, MIDNIGHT, [0, 0, info.current_w / 4 + 32, info.current_h])
+            stats_fps  = text_font.render('FPS:          ' + str(round(clock.get_fps(), 1)), True, MARBLE)
+            stats_time = text_font.render('Last tick:    ' + str(round(clock.get_time(), 4)) + 'ms', True, MARBLE)
+            stats_raw  = text_font.render('Raw tick:     ' + str(round(clock.get_rawtime(), 4)) + 'ms', True, MARBLE)
+
+            stat_x = 6
+            for stat in stats:
+                offscreen_surface.blit(stat, [6, stat_x])
+                stat_x += 20
+            offscreen_surface.blit(stats_fps, [6, stat_x])
+            stat_x += 20
+            offscreen_surface.blit(stats_time, [6, stat_x])
+            stat_x += 20
+            offscreen_surface.blit(stats_raw, [6, stat_x])
 
 
 
