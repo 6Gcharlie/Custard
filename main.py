@@ -109,6 +109,7 @@ if (__name__ == '__main__'):
 
         if (gravity == 12):
             circle_loop = 'up'
+            gravity -= 1
         
         if (gravity == 0):
             circle_loop = 'down'
