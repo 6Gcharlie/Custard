@@ -3,6 +3,18 @@ import pygame
 from OpenGL.GL import *
 from pygame.locals import *
 
+def Custard_Set_Clock(clock):
+    setting_clock = True
+    tick_list = []
+    while setting_clock:
+        print(clock.tick())
+
+        pygame.display.flip()
+        clock.tick()
+
+    return fps
+
+
 def Custard_OpenGL_Configuration(info):
     # - Configure the OpenGL window
     glViewport(0, 0, info.current_w, info.current_h)
