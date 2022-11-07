@@ -1,6 +1,7 @@
 # - Import all necessary modules
 import pygame
 import os
+import time
 from OpenGL.GL import *
 from pygame.locals import *
 from custard import *
@@ -15,8 +16,8 @@ pygame.display.init()
 # - Game library
 game = {
         'running': True, 'FPS': 60,
-        'paused': False, 'loop': 'get clock',
-        'clock': 'busy', 'dev console': False,
+        'paused': False, 'loop': 'splashscreen',
+        'clock': 'not', 'dev console': False,
         'display': {
                     'aspect ratio': '16:9', 'width': 1280,
                     'height': 720, 'type': 'OpenGL',
@@ -66,6 +67,11 @@ colours = {
 
 
 
+# - Create a variable for time keeping
+prev_time = time.time()
+
+
+
 # - Create basic font class and font object
 text_font = pygame.font.Font(os.path.join(file_path + 'fonts/pcsenior.ttf'), 16)
 
@@ -86,16 +92,19 @@ circle_y = info.current_h / 2
 circle_loop = 'down'
 gravity = 1
 
-movement_speed = 0.75
+movement_speed = 100
 
 # - Main game loop
 if (__name__ == '__main__'):
     while game['running']:
         match game['loop']:
             case 'get clock':
-                game['FPS'] = Custard_Set_Clock(clock)
+                game['FPS'] = Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID)
+                stats.append(text_font.render('Set FPS:      ' + str(game['FPS']), True, colours['marble']))
+                movement_speed = 60 / game['FPS']
+                print(movement_speed)
                 game['loop'] = 'splashscreen'
             case 'splashscreen':
-                GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface)
+                GraphicsTestLoop(prev_time, game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface)
     
     pygame.quit()

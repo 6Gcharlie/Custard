@@ -1,11 +1,24 @@
 import pygame
+import time
 from OpenGL.GL import *
 
-def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface):
-    
+def GraphicsTestLoop(prev_time, game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface):
+
     """ =-=-= Events =-=-= """
 
     while game['running']:
+
+        # - Allow the screen to be updated
+        if (game['clock'] == 'busy'):
+            clock.tick_busy_loop(game['FPS'])
+        else:
+            clock.tick(game['FPS'])
+
+        # - Delta time
+        now = time.time()
+        dt = now - prev_time
+        prev_time = now
+
         for event in pygame.event.get():
             match event.type:
                 case pygame.QUIT:
@@ -29,19 +42,19 @@ def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, c
 
         if (gravity >= 26):
             circle_loop = 'up'
-            gravity -= movement_speed
+            gravity -= movement_speed * dt
         
         if (gravity <= 0):
             circle_loop = 'down'
 
         if (circle_loop == 'down'):
             circle_y += gravity
-            gravity += movement_speed
+            gravity += movement_speed * dt
         else:
             circle_y -= gravity
-            gravity -= movement_speed
+            gravity -= movement_speed * dt
 
-        box_x += movement_speed
+        box_x += movement_speed * dt
 
 
 
@@ -82,10 +95,3 @@ def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, c
             offscreen_surface = pygame.transform.scale(offscreen_surface, [game['display']['width'], game['display']['height']])
             window.blit(offscreen_surface, [0, 0])
             pygame.display.update()
-
-        # - Allow the screen to be updated
-        if (game['clock'] == 'busy'):
-            clock.tick_busy_loop(game['FPS'])
-        else:
-            clock.tick(game['FPS'])
-
