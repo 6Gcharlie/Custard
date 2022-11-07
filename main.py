@@ -1,7 +1,6 @@
 # - Import all necessary modules
 import pygame
 import os
-import time
 from OpenGL.GL import *
 from pygame.locals import *
 from custard import *
@@ -10,6 +9,19 @@ from loops import *
 # - Initialise modules
 pygame.init()
 pygame.display.init()
+clock = pygame.time.Clock()
+
+
+
+# - Create colour RGB values
+MIDNIGHT = [ 48,  44,  46]
+SLATE    = [ 90,  83,  83]
+MARBLE   = [125, 113, 122]
+BUTTER   = [255, 245, 100]
+colours = {
+           'midnight' : [ 48,  44,  46], 'slate'  : [ 90,  83,  83],
+           'marble'   : [125, 113, 122], 'butter' : [255, 245, 100] 
+          }
 
 
 
@@ -17,7 +29,8 @@ pygame.display.init()
 game = {
         'running': True, 'FPS': 60,
         'paused': False, 'loop': 'splashscreen',
-        'clock': 'not', 'dev console': False,
+        'clock type': 'busy', 'dev console': False,
+        'clock': clock, 'window': 'NA',
         'display': {
                     'aspect ratio': '16:9', 'width': 1280,
                     'height': 720, 'type': 'OpenGL',
@@ -46,29 +59,11 @@ else:
 
 # - Set window caption & create clock
 pygame.display.set_caption('Stone heart')
-clock = pygame.time.Clock()
 
 
 
 # - Basic file path
 file_path = 'data/original/'
-
-
-
-# - Create colour RGB values
-MIDNIGHT = [ 48,  44,  46]
-SLATE    = [ 90,  83,  83]
-MARBLE   = [125, 113, 122]
-BUTTER   = [255, 245, 100]
-colours = {
-           'midnight' : [ 48,  44,  46], 'slate'  : [ 90,  83,  83],
-           'marble'   : [125, 113, 122], 'butter' : [255, 245, 100] 
-          }
-
-
-
-# - Create a variable for time keeping
-prev_time = time.time()
 
 
 
@@ -79,9 +74,9 @@ stats = []
 stats.append(text_font.render('Developer Stats', True, colours['marble']))
 stats.append(text_font.render('---------------', True, colours['marble']))
 stats.append(text_font.render('Surface:      ' + game['display']['type'], True, colours['marble']))
-stats.append(text_font.render('Clock:        ' + game['clock'], True, colours['marble']))
+stats.append(text_font.render('Clock:        ' + game['clock type'], True, colours['marble']))
 stats.append(text_font.render('Aspect ratio: ' + game['display']['aspect ratio'], True, colours['marble']))
-stats.append(text_font.render('Vsync :       ' + str(game['display']['vsync']), True, colours['marble']))
+stats.append(text_font.render('Vsync:        ' + str(game['display']['vsync']), True, colours['marble']))
 stats.append(text_font.render('Width:        ' + str(game['display']['width']), True, colours['marble']))
 stats.append(text_font.render('Height:       ' + str(game['display']['height']), True, colours['marble']))
 
@@ -105,6 +100,6 @@ if (__name__ == '__main__'):
                 print(movement_speed)
                 game['loop'] = 'splashscreen'
             case 'splashscreen':
-                GraphicsTestLoop(prev_time, game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface)
+                GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface)
     
     pygame.quit()

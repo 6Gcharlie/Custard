@@ -2,17 +2,22 @@ import pygame
 import time
 from OpenGL.GL import *
 
-def GraphicsTestLoop(prev_time, game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface):
+def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface):
+    # - Create a variable for time keeping
+    prev_time = time.time()
 
-    """ =-=-= Events =-=-= """
 
+
+    # - GraphicsTestLoop
     while game['running']:
 
+        """ =-=-= Events =-=-= """
+
         # - Allow the screen to be updated
-        if (game['clock'] == 'busy'):
-            clock.tick_busy_loop(game['FPS'])
+        if (game['clock type'] == 'busy'):
+            game['clock'].tick_busy_loop(game['FPS'])
         else:
-            clock.tick(game['FPS'])
+            game['clock'].tick(game['FPS'])
 
         # - Delta time
         now = time.time()
