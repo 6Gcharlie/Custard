@@ -3,6 +3,30 @@ import pygame
 from OpenGL.GL import *
 from pygame.locals import *
 
+def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
+    setting_clock = True
+    tick_list = []
+    while setting_clock:
+
+        if (clock.get_fps != 0.0):
+
+            tick_list.append(clock.get_fps())
+
+            if (len(tick_list) == 50):
+                tick_list.sort()
+                fps = int(round(tick_list[25], 0))
+                print("The new FPS is set at: " + str(fps))
+                setting_clock = False
+            else:
+                print(clock.get_fps())
+                offscreen_surface.fill([55,  55,  55])
+                Custard_OpenGL_Blit(offscreen_surface, texID)
+                pygame.display.flip()
+                clock.tick()
+
+    return fps
+
+
 def Custard_OpenGL_Configuration(info):
     # - Configure the OpenGL window
     glViewport(0, 0, info.current_w, info.current_h)
