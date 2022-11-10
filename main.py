@@ -3,8 +3,8 @@ import pygame
 import os
 from OpenGL.GL import *
 from pygame.locals import *
-from custard import *
-from loops import *
+from data.original.scripts.custard import *
+from data.original.scripts.loops import *
 
 # - Initialise modules
 pygame.init()
@@ -13,11 +13,12 @@ clock = pygame.time.Clock()
 
 
 
-# - Create colour RGB values
-MIDNIGHT = [ 48,  44,  46]
-SLATE    = [ 90,  83,  83]
-MARBLE   = [125, 113, 122]
-BUTTER   = [255, 245, 100]
+# - Basic file path
+file_path = 'data/original/'
+
+
+
+# - Create colours dictionary
 colours = {
            'midnight' : [ 48,  44,  46], 'slate'  : [ 90,  83,  83],
            'marble'   : [125, 113, 122], 'butter' : [255, 245, 100] 
@@ -28,13 +29,13 @@ colours = {
 # - Game library
 game = {
         'running': True, 'FPS': 60,
-        'paused': False, 'loop': 'splashscreen',
+        'paused': False, 'loop': 'get clock',
         'clock type': 'busy', 'dev console': False,
         'clock': clock, 'window': 'NA',
         'display': {
                     'aspect ratio': '16:9', 'width': 1280,
                     'height': 720, 'type': 'OpenGL',
-                    'vsync': True, 'flags': DOUBLEBUF
+                    'vsync': 1, 'flags': DOUBLEBUF | HWSURFACE
                    },
         'volume': {
                    'master': 100, 'music': 100,
@@ -46,24 +47,24 @@ game = {
 
 # - Create an SDL/OpenGL window
 if (game['display']['type'] == 'OpenGL'):
+
+    # - Create a window using OpenGL
     pygame.display.set_mode((game['display']['width'], game['display']['height']), OPENGL | game['display']['flags'], game['display']['vsync'])
     info = pygame.display.Info()
     Custard_OpenGL_Configuration(info)
     texID = glGenTextures(1)
     offscreen_surface = pygame.Surface((info.current_w, info.current_h))
     window = "NA"
+
 else:
+
+    # - Create a window using SDL
     window = pygame.display.set_mode((game['display']['width'], game['display']['height']), game['display']['flags'], game['display']['vsync'])
     info = pygame.display.Info()
     offscreen_surface = pygame.Surface((info.current_w / 2, info.current_h / 2))
 
 # - Set window caption & create clock
 pygame.display.set_caption('Stone heart')
-
-
-
-# - Basic file path
-file_path = 'data/original/'
 
 
 
@@ -96,8 +97,6 @@ if (__name__ == '__main__'):
             case 'get clock':
                 game['FPS'] = Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID)
                 stats.append(text_font.render('Set FPS:      ' + str(game['FPS']), True, colours['marble']))
-                movement_speed = 60 / game['FPS']
-                print(movement_speed)
                 game['loop'] = 'splashscreen'
             case 'splashscreen':
                 GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface)

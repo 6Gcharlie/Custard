@@ -8,18 +8,21 @@ def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
     tick_list = []
     while setting_clock:
 
-        tick_list.append(clock.get_fps())
+        if (clock.get_fps != 0.0):
 
-        if (len(tick_list) == 50):
-            tick_list.sort()
-            fps = round(tick_list[25], 0)
-            setting_clock = False
-        else:
-            print(clock.get_fps())
-            offscreen_surface.fill([55,  55,  55])
-            Custard_OpenGL_Blit(offscreen_surface, texID)
-            pygame.display.flip()
-            clock.tick()
+            tick_list.append(clock.get_fps())
+
+            if (len(tick_list) == 50):
+                tick_list.sort()
+                fps = int(round(tick_list[25], 0))
+                print("The new FPS is set at: " + str(fps))
+                setting_clock = False
+            else:
+                print(clock.get_fps())
+                offscreen_surface.fill([55,  55,  55])
+                Custard_OpenGL_Blit(offscreen_surface, texID)
+                pygame.display.flip()
+                clock.tick()
 
     return fps
 

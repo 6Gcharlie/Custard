@@ -6,8 +6,6 @@ def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, c
     # - Create a variable for time keeping
     prev_time = time.time()
 
-
-
     # - GraphicsTestLoop
     while game['running']:
 
