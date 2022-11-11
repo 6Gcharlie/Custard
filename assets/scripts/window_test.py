@@ -10,34 +10,35 @@ def WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, cir
     
     # - Create a variable for time keeping
     prev_time = time.time()
-
     developer_obj = developer_info(game)
 
-    while game['running']:
-
+    while game.loop == 'window test':
+        # - Delta time ticker
         dt, prev_time = DeltaTime(prev_time)
 
         # - Allow the screen to be updated
-        if (game['clock type'] == 'busy'):
-            game['clock'].tick_busy_loop(game['FPS'])
+        if (game.tick == 'busy'):
+            game.clock.tick_busy_loop(game.fps)
         else:
-            game['clock'].tick(game['FPS'])
+            game.clock.tick(game.fps)
 
         # - Events are caught and processed here
         for event in pygame.event.get():
             match event.type:
                 case pygame.QUIT:
-                    game['running'] = False
+                    game.SetLoop('NA')
+                    game.SetRunning(False)
                 case pygame.KEYDOWN:
                     match event.key:
                         case 27:
-                            game['running'] = False
+                            game.SetLoop('NA')
+                            game.SetRunning(False)
                         case _:
                             print('Key pressed: ' + str(event.key))
 
             developer_obj.events(event)
 
-        developer_obj.update(game['clock'])
+        developer_obj.update(game.clock)
 
         # - Game logic is processed here
         if (gravity >= 26):
@@ -59,16 +60,16 @@ def WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, cir
 
 
         # - Apply all normal pygame functions to the offscreen_surface
-        offscreen_surface.fill(game['colours']['slate'])
-        pygame.draw.circle(offscreen_surface, game['colours']['marble'], [circle_x, circle_y], 30)
-        pygame.draw.rect(offscreen_surface, game['colours']['marble'], [box_x, 640, 50, 50])
+        game.surface.fill(game.slate_colour)
+        pygame.draw.circle(game.surface, game.marble_colour, [circle_x, circle_y], 30)
+        pygame.draw.rect(game.surface, game.marble_colour, [box_x, 640, 50, 50])
 
         # - Draw the developer overlay
-        developer_obj.draw(offscreen_surface)
+        developer_obj.draw(game.surface)
 
         # - Prepare and draw the surface using OpenGL if necessary
-        if (game['display']['type'] == 'OpenGL'):
-            Custard_OpenGL_Blit(offscreen_surface, game['texID'])
+        if (game.type == 'OpenGL'):
+            Custard_OpenGL_Blit(game.surface, game.texID)
             pygame.display.flip()
         else:
             offscreen_surface = pygame.transform.scale(offscreen_surface, [game['display']['width'], game['display']['height']])

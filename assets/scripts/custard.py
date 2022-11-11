@@ -3,6 +3,77 @@ import pygame
 import time
 from OpenGL.GL import *
 
+
+
+# - The game class is used for general game data/functionality
+class Game(pygame.sprite.Sprite):
+    # - Initialise the object
+    def __init__(self):
+        # - Define static attribute
+        self.running = True
+        self.paused = False
+        self.clock = pygame.time.Clock()
+        self.surface = None
+
+        # - Define general dynamic attribute
+        self.fps = 60
+        self.loop = 'window test'
+        self.tick = 'busy'
+        self.path = 'assets/original/'
+        self.texID = None
+
+        # - Window related dynamic attribute
+        self.vsync = True
+        self.aspect_ratio = '16:9'
+        self.width = 1280
+        self.height = 720
+        self.type = 'OpenGL'
+        self.flags = pygame.DOUBLEBUF | pygame.HWSURFACE
+
+        # - Game volume dynamic attribute
+        self.master_volume = 100
+        self.music_volume = 100
+        self.sound_volume = 100
+        self.voices_volume = 100
+
+        # - Game colour tuple attribute
+        self.midnight_colour = [ 48,  44,  46]
+        self.slate_colour    = [ 90,  83,  83]
+        self.marble_colour   = [125, 113, 122]
+        self.butter_colour   = [255, 245, 100]
+
+
+
+    # - Method to create a surface
+    def SetGameSurface(self, caption):
+        if (self.type == 'OpenGL'):
+            pygame.display.set_mode([self.width, self.height], pygame.OPENGL | self.flags, self.vsync)
+            info = pygame.display.Info()
+            Custard_OpenGL_Configuration(info)
+            self.texID = glGenTextures(1)
+            self.surface = pygame.Surface([self.width, self.height])
+            pygame.display.set_caption(caption)
+
+
+
+    # - Set the TexID method
+    def SetTexID(self, texID):
+        self.texID = texID
+
+    # - Set the fps method
+    def SetFPS(self, FPS):
+        self.fps = FPS
+
+    # - Set the game loop method
+    def SetLoop(self, loop):
+        self.loop = loop
+
+    # - Set the 'running' attribute, method
+    def SetRunning(self, running):
+        self.running = running
+
+
+
 def DeltaTime(prev_time):
     now = time.time()
     dt = now - prev_time
