@@ -3,18 +3,19 @@ import pygame
 import time
 from OpenGL.GL import *
 from assets.scripts.custard import *
+from assets.scripts.develop_module import *
 
 # - This loop is used for testing the responsiveness of the game window
-def WindowTestEnvironment(game, clock, gravity, movement_speed, text_font, circle_y, circle_x, info, window, texID, stats, circle_loop, box_x, offscreen_surface):
+def WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, circle_loop, box_x, offscreen_surface):
     
     # - Create a variable for time keeping
     prev_time = time.time()
 
+    developer_obj = developer_info(game)
+
     while game['running']:
-        # - Delta time
-        now = time.time()
-        dt = now - prev_time
-        prev_time = now
+
+        dt, prev_time = DeltaTime(prev_time)
 
         # - Allow the screen to be updated
         if (game['clock type'] == 'busy'):
@@ -31,13 +32,12 @@ def WindowTestEnvironment(game, clock, gravity, movement_speed, text_font, circl
                     match event.key:
                         case 27:
                             game['running'] = False
-                        case 96:
-                            if (game['dev console']):
-                                game['dev console'] = False
-                            else:
-                                game['dev console'] = True
                         case _:
-                            print(event.key)
+                            print('Key pressed: ' + str(event.key))
+
+            developer_obj.events(event)
+
+        developer_obj.update(game['clock'])
 
         # - Game logic is processed here
         if (gravity >= 26):
@@ -63,28 +63,14 @@ def WindowTestEnvironment(game, clock, gravity, movement_speed, text_font, circl
         pygame.draw.circle(offscreen_surface, game['colours']['marble'], [circle_x, circle_y], 30)
         pygame.draw.rect(offscreen_surface, game['colours']['marble'], [box_x, 640, 50, 50])
 
-        # - Draw dev console stats if active
-        if (game['dev console']):
-            pygame.draw.rect(offscreen_surface, game['colours']['midnight'], [0, 0, info.current_w / 4 + 32, info.current_h])
-            stats_fps  = text_font.render('FPS:          ' + str(round(clock.get_fps(), 1)), True, game['colours']['marble'])
-            stats_time = text_font.render('Last tick:    ' + str(round(clock.get_time(), 4)) + 'ms', True, game['colours']['marble'])
-            stats_raw  = text_font.render('Raw tick:     ' + str(round(clock.get_rawtime(), 4)) + 'ms', True, game['colours']['marble'])
-
-            stat_x = 6
-            for stat in stats:
-                offscreen_surface.blit(stat, [6, stat_x])
-                stat_x += 20
-            offscreen_surface.blit(stats_fps, [6, stat_x])
-            stat_x += 20
-            offscreen_surface.blit(stats_time, [6, stat_x])
-            stat_x += 20
-            offscreen_surface.blit(stats_raw, [6, stat_x])
+        # - Draw the developer overlay
+        developer_obj.draw(offscreen_surface)
 
         # - Prepare and draw the surface using OpenGL if necessary
         if (game['display']['type'] == 'OpenGL'):
-            Custard_OpenGL_Blit(offscreen_surface, texID)
+            Custard_OpenGL_Blit(offscreen_surface, game['texID'])
             pygame.display.flip()
         else:
             offscreen_surface = pygame.transform.scale(offscreen_surface, [game['display']['width'], game['display']['height']])
-            window.blit(offscreen_surface, [0, 0])
+            game['window'].blit(offscreen_surface, [0, 0])
             pygame.display.update()

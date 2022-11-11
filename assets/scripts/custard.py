@@ -1,7 +1,15 @@
 # - Required modules for custard.py
 import pygame
+import time
 from OpenGL.GL import *
-from pygame.locals import *
+
+def DeltaTime(prev_time):
+    now = time.time()
+    dt = now - prev_time
+    prev_time = now
+    return dt, prev_time
+
+
 
 def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
     setting_clock = True
@@ -12,10 +20,9 @@ def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
 
             tick_list.append(clock.get_fps())
 
-            if (len(tick_list) == 50):
+            if (len(tick_list) == 100):
                 tick_list.sort()
                 fps = int(round(tick_list[25], 0))
-                print("The new FPS is set at: " + str(fps))
                 setting_clock = False
             else:
                 print(clock.get_fps())
@@ -25,6 +32,7 @@ def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
                 clock.tick()
 
     return fps
+
 
 
 def Custard_OpenGL_Configuration(info):
