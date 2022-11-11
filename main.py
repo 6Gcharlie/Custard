@@ -3,44 +3,39 @@ import pygame
 import os
 from OpenGL.GL import *
 from pygame.locals import *
-from data.original.scripts.custard import *
-from data.original.scripts.loops import *
+from assets.scripts.custard import *
+from assets.scripts.window_test import *
 
 # - Initialise modules
 pygame.init()
 pygame.display.init()
 clock = pygame.time.Clock()
 
-
-
 # - Basic file path
-file_path = 'data/original/'
+file_path = 'assets/original/'
 
 
 
-# - Create colours dictionary
-colours = {
-           'midnight' : [ 48,  44,  46], 'slate'  : [ 90,  83,  83],
-           'marble'   : [125, 113, 122], 'butter' : [255, 245, 100] 
-          }
 
-
-
-# - Game library
+# - Game dictionary
 game = {
         'running': True, 'FPS': 60,
-        'paused': False, 'loop': 'get clock',
+        'paused': False, 'loop': 'window test',
         'clock type': 'busy', 'dev console': False,
         'clock': clock, 'window': 'NA',
         'display': {
                     'aspect ratio': '16:9', 'width': 1280,
                     'height': 720, 'type': 'OpenGL',
-                    'vsync': 1, 'flags': DOUBLEBUF | HWSURFACE
+                    'vsync': True, 'flags': DOUBLEBUF | HWSURFACE
                    },
         'volume': {
                    'master': 100, 'music': 100,
                    'sound effects': 100, 'voices': 100
-                  }
+                  },
+        'colours': {
+                    'midnight' : [ 48,  44,  46], 'slate'  : [ 90,  83,  83],
+                    'marble'   : [125, 113, 122], 'butter' : [255, 245, 100] 
+                   }
        }
 
 
@@ -68,18 +63,19 @@ pygame.display.set_caption('Stone heart')
 
 
 
+
 # - Create basic font class and font object
 text_font = pygame.font.Font(os.path.join(file_path + 'fonts/pcsenior.ttf'), 16)
 
 stats = []
-stats.append(text_font.render('Developer Stats', True, colours['marble']))
-stats.append(text_font.render('---------------', True, colours['marble']))
-stats.append(text_font.render('Surface:      ' + game['display']['type'], True, colours['marble']))
-stats.append(text_font.render('Clock:        ' + game['clock type'], True, colours['marble']))
-stats.append(text_font.render('Aspect ratio: ' + game['display']['aspect ratio'], True, colours['marble']))
-stats.append(text_font.render('Vsync:        ' + str(game['display']['vsync']), True, colours['marble']))
-stats.append(text_font.render('Width:        ' + str(game['display']['width']), True, colours['marble']))
-stats.append(text_font.render('Height:       ' + str(game['display']['height']), True, colours['marble']))
+stats.append(text_font.render('Developer Stats',                                      True, game['colours']['marble']))
+stats.append(text_font.render('---------------',                                      True, game['colours']['marble']))
+stats.append(text_font.render('Surface:      ' +     game['display']['type'],         True, game['colours']['marble']))
+stats.append(text_font.render('Clock:        ' +     game['clock type'],              True, game['colours']['marble']))
+stats.append(text_font.render('Aspect ratio: ' +     game['display']['aspect ratio'], True, game['colours']['marble']))
+stats.append(text_font.render('Vsync:        ' + str(game['display']['vsync']),       True, game['colours']['marble']))
+stats.append(text_font.render('Width:        ' + str(game['display']['width']),       True, game['colours']['marble']))
+stats.append(text_font.render('Height:       ' + str(game['display']['height']),      True, game['colours']['marble']))
 
 box_x = 100
 
@@ -96,9 +92,9 @@ if (__name__ == '__main__'):
         match game['loop']:
             case 'get clock':
                 game['FPS'] = Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID)
-                stats.append(text_font.render('Set FPS:      ' + str(game['FPS']), True, colours['marble']))
+                stats.append(text_font.render('Set FPS:      ' + str(game['FPS']), True, game['colours']['marble']))
                 game['loop'] = 'splashscreen'
-            case 'splashscreen':
-                GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface)
+            case 'window test':
+                WindowTestEnvironment(game, clock, gravity, movement_speed, text_font, circle_y, circle_x, info, window, texID, stats, circle_loop, box_x, offscreen_surface)
     
     pygame.quit()

@@ -1,15 +1,20 @@
+# - Modules necessary for testing operation
 import pygame
 import time
 from OpenGL.GL import *
+from assets.scripts.custard import *
 
-def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, circle_y, circle_x, info, window, texID, Custard_OpenGL_Blit, stats, circle_loop, box_x, offscreen_surface):
+# - This loop is used for testing the responsiveness of the game window
+def WindowTestEnvironment(game, clock, gravity, movement_speed, text_font, circle_y, circle_x, info, window, texID, stats, circle_loop, box_x, offscreen_surface):
+    
     # - Create a variable for time keeping
     prev_time = time.time()
 
-    # - GraphicsTestLoop
     while game['running']:
-
-        """ =-=-= Events =-=-= """
+        # - Delta time
+        now = time.time()
+        dt = now - prev_time
+        prev_time = now
 
         # - Allow the screen to be updated
         if (game['clock type'] == 'busy'):
@@ -17,11 +22,7 @@ def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, c
         else:
             game['clock'].tick(game['FPS'])
 
-        # - Delta time
-        now = time.time()
-        dt = now - prev_time
-        prev_time = now
-
+        # - Events are caught and processed here
         for event in pygame.event.get():
             match event.type:
                 case pygame.QUIT:
@@ -38,11 +39,7 @@ def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, c
                         case _:
                             print(event.key)
 
-
-
-
-        """ =-=-= Logic =-=-= """
-
+        # - Game logic is processed here
         if (gravity >= 26):
             circle_loop = 'up'
             gravity -= movement_speed * dt
@@ -61,20 +58,17 @@ def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, c
 
 
 
-
-        """ =-=-= Draw =-=-= """
-
         # - Apply all normal pygame functions to the offscreen_surface
-        offscreen_surface.fill(colours['slate'])
-        pygame.draw.circle(offscreen_surface, colours['marble'], [circle_x, circle_y], 30)
-        pygame.draw.rect(offscreen_surface, colours['marble'], [box_x, 640, 50, 50])
+        offscreen_surface.fill(game['colours']['slate'])
+        pygame.draw.circle(offscreen_surface, game['colours']['marble'], [circle_x, circle_y], 30)
+        pygame.draw.rect(offscreen_surface, game['colours']['marble'], [box_x, 640, 50, 50])
 
         # - Draw dev console stats if active
         if (game['dev console']):
-            pygame.draw.rect(offscreen_surface, colours['midnight'], [0, 0, info.current_w / 4 + 32, info.current_h])
-            stats_fps  = text_font.render('FPS:          ' + str(round(clock.get_fps(), 1)), True, colours['marble'])
-            stats_time = text_font.render('Last tick:    ' + str(round(clock.get_time(), 4)) + 'ms', True, colours['marble'])
-            stats_raw  = text_font.render('Raw tick:     ' + str(round(clock.get_rawtime(), 4)) + 'ms', True, colours['marble'])
+            pygame.draw.rect(offscreen_surface, game['colours']['midnight'], [0, 0, info.current_w / 4 + 32, info.current_h])
+            stats_fps  = text_font.render('FPS:          ' + str(round(clock.get_fps(), 1)), True, game['colours']['marble'])
+            stats_time = text_font.render('Last tick:    ' + str(round(clock.get_time(), 4)) + 'ms', True, game['colours']['marble'])
+            stats_raw  = text_font.render('Raw tick:     ' + str(round(clock.get_rawtime(), 4)) + 'ms', True, game['colours']['marble'])
 
             stat_x = 6
             for stat in stats:
@@ -85,10 +79,6 @@ def GraphicsTestLoop(game, clock, gravity, movement_speed, colours, text_font, c
             offscreen_surface.blit(stats_time, [6, stat_x])
             stat_x += 20
             offscreen_surface.blit(stats_raw, [6, stat_x])
-
-
-
-        """ =-=-= Refresh =-=-= """
 
         # - Prepare and draw the surface using OpenGL if necessary
         if (game['display']['type'] == 'OpenGL'):
