@@ -5,22 +5,22 @@ class developer_info(pygame.sprite.Sprite):
     def __init__(self, game):
         # - Developer info settings
         self.visible = False
-        self.text_colour = game['colours']['slate']
-        self.background_colour = game['colours']['midnight']
-        self.font = pygame.font.Font(os.path.join(game['path'] + 'fonts/pcsenior.ttf'), 12)
-        self.image = pygame.Surface([game['display']['width'] / 4, game['display']['height']])
+        self.text_colour = game.slate_colour
+        self.background_colour = game.midnight_colour
+        self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), 12)
+        self.image = pygame.Surface([game.width / 4, game.height])
         self.row_height = 40
 
         # - Rendered information
         self.title = self.font.render('Developer Stats', True, self.text_colour)
 
         self.static_stats = []
-        self.static_stats.append(self.font.render('Surface:      ' + game['display']['type'], True, self.text_colour))
-        self.static_stats.append(self.font.render('Clock:        ' + game['clock type'], True, self.text_colour))
-        self.static_stats.append(self.font.render('Aspect:       ' + game['display']['aspect ratio'], True, self.text_colour))
-        self.static_stats.append(self.font.render('Vsync:        ' + str(game['display']['vsync']), True, self.text_colour))
-        self.static_stats.append(self.font.render('Width:        ' + str(game['display']['width']), True, self.text_colour))
-        self.static_stats.append(self.font.render('Height:       ' + str(game['display']['height']), True, self.text_colour))
+        self.static_stats.append(self.font.render('Surface:      ' + game.type, True, self.text_colour))
+        self.static_stats.append(self.font.render('Clock:        ' + game.tick, True, self.text_colour))
+        self.static_stats.append(self.font.render('Aspect:       ' + game.aspect_ratio, True, self.text_colour))
+        self.static_stats.append(self.font.render('Vsync:        ' + str(game.vsync), True, self.text_colour))
+        self.static_stats.append(self.font.render('Width:        ' + str(game.width), True, self.text_colour))
+        self.static_stats.append(self.font.render('Height:       ' + str(game.height), True, self.text_colour))
 
         self.dynamic_stats = []
         self.dynamic_stats.append(self.font.render('FPS:          ' + '0', True, self.text_colour))
