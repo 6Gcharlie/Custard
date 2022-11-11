@@ -3,6 +3,18 @@ import pygame
 import time
 from OpenGL.GL import *
 
+
+
+# - The game class is used for general game data/functionality
+class Game():
+    def __init__(self):
+        # - Define static fields
+        self.running = True
+        self.paused = False
+        self.clock = pygame.time.Clock()
+
+
+
 def DeltaTime(prev_time):
     now = time.time()
     dt = now - prev_time
