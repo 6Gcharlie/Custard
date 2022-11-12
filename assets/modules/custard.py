@@ -17,7 +17,7 @@ class Game(pygame.sprite.Sprite):
 
         # - Define general dynamic attribute
         self.fps = 60
-        self.loop = 'window test'
+        self.loop = 'get clock'
         self.tick = 'NA'
         self.path = 'assets/original/'
         self.texID = None
@@ -84,8 +84,10 @@ class Game(pygame.sprite.Sprite):
             case pygame.KEYDOWN:
                 match event.key:
                     case 27:
-                        self.SetLoop('NA')
-                        self.SetRunning(False)
+                        if (self.paused):
+                            self.paused = False
+                        else:
+                            self.paused = True
                     case _:
                         print('Key pressed: ' + str(event.key))
 
@@ -132,7 +134,7 @@ def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
 
             if (len(tick_list) == 100):
                 tick_list.sort()
-                fps = int(round(tick_list[25], 0))
+                fps = int(round(tick_list[25], 0) - 10)
                 setting_clock = False
             else:
                 print(clock.get_fps())

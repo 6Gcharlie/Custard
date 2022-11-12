@@ -28,21 +28,22 @@ def WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, cir
         # - Game logic is processed here
         developer_obj.update(game.clock)
 
-        if (gravity >= 26):
-            circle_loop = 'up'
-            gravity -= movement_speed * game.delta_time
-        
-        if (gravity <= 0):
-            circle_loop = 'down'
+        if (game.paused == False):
+            if (gravity >= 26):
+                circle_loop = 'up'
+                gravity -= movement_speed * game.delta_time
+            
+            if (gravity <= 0):
+                circle_loop = 'down'
 
-        if (circle_loop == 'down'):
-            circle_y += gravity
-            gravity += movement_speed * game.delta_time
-        else:
-            circle_y -= gravity
-            gravity -= movement_speed * game.delta_time
+            if (circle_loop == 'down'):
+                circle_y += gravity
+                gravity += movement_speed * game.delta_time
+            else:
+                circle_y -= gravity
+                gravity -= movement_speed * game.delta_time
 
-        box_x += movement_speed * game.delta_time
+            box_x += movement_speed * game.delta_time
 
 
 
