@@ -33,8 +33,7 @@ if (__name__ == '__main__'):
     while game.running:
         match game.loop:
             case 'get clock':
-                FPS = Custard_Set_Clock(game.clock, game.surface, Custard_OpenGL_Blit, game['texID'])
-                game.SetFPS(FPS)
+                game.SetFPS(Custard_Set_Clock(game.clock, game.surface, Custard_OpenGL_Blit, game.texID))
                 game.SetLoop('window test')
             case 'window test':
                 WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, circle_loop, box_x)
