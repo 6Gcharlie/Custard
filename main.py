@@ -1,7 +1,7 @@
 # - Import all necessary modules
 import pygame
 from OpenGL.GL import *
-from assets.scripts.custard import *
+from assets.modules.custard import *
 from assets.scripts.window_test import *
 
 # - Initialise modules
@@ -37,6 +37,6 @@ if (__name__ == '__main__'):
                 game.SetFPS(FPS)
                 game.SetLoop('window test')
             case 'window test':
-                WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, circle_loop, box_x, game.surface)
+                WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, circle_loop, box_x)
     
     pygame.quit()

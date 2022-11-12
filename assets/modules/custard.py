@@ -18,7 +18,7 @@ class Game(pygame.sprite.Sprite):
         # - Define general dynamic attribute
         self.fps = 60
         self.loop = 'window test'
-        self.tick = 'busy'
+        self.tick = 'NA'
         self.path = 'assets/original/'
         self.texID = None
 
@@ -42,6 +42,11 @@ class Game(pygame.sprite.Sprite):
         self.marble_colour   = [125, 113, 122]
         self.butter_colour   = [255, 245, 100]
 
+        # - Delta time attributes
+        self.prev_time = time.time()
+        self.now = time.time()
+        self.delta_time = self.now - self.prev_time
+
 
 
     # - Method to create a surface
@@ -53,6 +58,44 @@ class Game(pygame.sprite.Sprite):
             self.texID = glGenTextures(1)
             self.surface = pygame.Surface([self.width, self.height])
             pygame.display.set_caption(caption)
+
+
+
+    # - Method to update the screen with delta time
+    def DeltaClock(self):
+        # - Do delta time calculations
+        self.now = time.time()
+        self.delta_time = self.now - self.prev_time
+        self.prev_time = self.now
+
+        # - Update the clock
+        if (self.tick == 'busy'):
+            self.clock.tick_busy_loop(self.fps)
+        else:
+            self.clock.tick(self.fps)
+
+
+
+    def events(self, event):
+        match event.type:
+            case pygame.QUIT:
+                self.SetLoop('NA')
+                self.SetRunning(False)
+            case pygame.KEYDOWN:
+                match event.key:
+                    case 27:
+                        self.SetLoop('NA')
+                        self.SetRunning(False)
+                    case _:
+                        print('Key pressed: ' + str(event.key))
+
+
+
+    # - Draw screen
+    def draw(self):
+        if (self.type == 'OpenGL'):
+            Custard_OpenGL_Blit(self.surface, self.texID)
+            pygame.display.flip()
 
 
 
@@ -72,16 +115,12 @@ class Game(pygame.sprite.Sprite):
     def SetRunning(self, running):
         self.running = running
 
-
-
-def DeltaTime(prev_time):
-    now = time.time()
-    dt = now - prev_time
-    prev_time = now
-    return dt, prev_time
+    def GetPrevTime(self):
+        self.prev_time = time.time()
 
 
 
+# - This function is used to get a dynamic FPS value
 def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
     setting_clock = True
     tick_list = []
@@ -106,6 +145,7 @@ def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
 
 
 
+# - This function is used to configure a surface for OpenGL
 def Custard_OpenGL_Configuration(info):
     # - Configure the OpenGL window
     glViewport(0, 0, info.current_w, info.current_h)
@@ -121,6 +161,7 @@ def Custard_OpenGL_Configuration(info):
     glDepthFunc(GL_LEQUAL)
     glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
     glEnable(GL_BLEND)
+
 
 
 # - TODO: Optimise this? Not all these operations might be necessary
@@ -139,6 +180,7 @@ def Custard_Surface_To_Texture(pygame_surface, texID):
 
 
 
+# - Convert SDL surface to OpenGL texture
 def Custard_OpenGL_Blit(pygame_surface, texID):
     # - Prepare to render the texture-mapped rectangle
     glClear(GL_COLOR_BUFFER_BIT)
