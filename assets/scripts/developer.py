@@ -5,11 +5,13 @@ class developer_info(pygame.sprite.Sprite):
     def __init__(self, game):
         # - Developer info settings
         self.visible = False
+        self.window_width = game.width
+        self.window_height = game.height
         self.text_colour = game.slate_colour
         self.background_colour = game.midnight_colour
-        self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), 12)
-        self.image = pygame.Surface([game.width / 4, game.height])
-        self.row_height = 40
+        self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), int(round(game.width / 128, 0)))
+        self.image = pygame.Surface([game.width / 4, game.height / 2])
+        self.row_height = int(round(game.height / 18, 0))
 
         # - Rendered information
         self.title = self.font.render('Developer Stats', True, self.text_colour)
@@ -29,18 +31,18 @@ class developer_info(pygame.sprite.Sprite):
 
         # - Draw details
         self.image.fill(self.background_colour)
-        self.image.blit(self.title, [6, 6])
+        self.image.blit(self.title, [2, 2])
 
         for stat in self.static_stats:
-            self.image.blit(stat, [6, self.row_height])
-            self.row_height += 16
+            self.image.blit(stat, [2, self.row_height])
+            self.row_height += int(round(game.width / 80, 0))
 
-        self.row_height += 16
+        self.row_height += int(round(game.width / 80, 0))
         self.dynamic_height = self.row_height
 
         for stat in self.dynamic_stats:
-            self.image.blit(stat, [6, self.row_height])
-            self.row_height += 16
+            self.image.blit(stat, [2, self.row_height])
+            self.row_height += int(round(game.width / 80, 0))
 
         self.row_height = self.dynamic_height
 
@@ -66,8 +68,8 @@ class developer_info(pygame.sprite.Sprite):
 
         pygame.draw.rect(self.image, self.background_colour, [0, self.dynamic_height, 300, 150])
         for stat in self.dynamic_stats:
-            self.image.blit(stat, [6, self.row_height])
-            self.row_height += 16
+            self.image.blit(stat, [2, self.row_height])
+            self.row_height += int(round(self.window_width / 80, 0))
 
         self.row_height = self.dynamic_height
 
@@ -75,4 +77,4 @@ class developer_info(pygame.sprite.Sprite):
 
     def draw(self, surface):
         if (self.visible):
-            surface.blit(self.image, [0, 0])
+            surface.blit(self.image, [self.window_width / 4 * 3 + 2, 0])

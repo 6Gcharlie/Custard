@@ -3,30 +3,40 @@ import pygame
 import time
 from OpenGL.GL import *
 from assets.modules.custard import *
-from assets.scripts.develop_module import *
+from assets.scripts.developer import *
+from assets.scripts.pause import *
 
 # - This loop is used for testing the responsiveness of the game window
-def WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, circle_loop, box_x):
+def WindowTestEnvironment(game):
     
     # - Create a variable for time keeping
     game.GetPrevTime()
     developer_obj = developer_info(game)
+    pause_obj = pause_menu(game)
+
+    # - Temporary variables
+    box_x = 100
+    movement_speed = 100
+    circle_x = game.width / 2
+    circle_y = game.height / 2
+    circle_loop = 'down'
+    gravity = 1
 
     while game.loop == 'window test':
         # - Delta time ticker
-        game.DeltaClock()
-
-
+        game.CustardClock()
 
         # - Events are caught and processed here
         for event in pygame.event.get():
             game.events(event)
             developer_obj.events(event)
+            pause_obj.events(event, game)
 
 
 
         # - Game logic is processed here
         developer_obj.update(game.clock)
+        pause_obj.update(game)
 
         if (game.paused == False):
             if (gravity >= 26):
@@ -54,4 +64,5 @@ def WindowTestEnvironment(game, gravity, movement_speed, circle_y, circle_x, cir
 
         # - Draw the screen
         developer_obj.draw(game.surface)
+        pause_obj.draw(game.surface)
         game.draw()

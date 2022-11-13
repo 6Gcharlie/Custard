@@ -8,7 +8,7 @@ from OpenGL.GL import *
 # - The game class is used for general game data/functionality
 class Game(pygame.sprite.Sprite):
     # - Initialise the object
-    def __init__(self):
+    def __init__(self, width, height):
         # - Define static attribute
         self.running = True
         self.paused = False
@@ -17,7 +17,7 @@ class Game(pygame.sprite.Sprite):
 
         # - Define general dynamic attribute
         self.fps = 60
-        self.loop = 'get clock'
+        self.loop = 'window test'
         self.tick = 'NA'
         self.path = 'assets/original/'
         self.texID = None
@@ -25,8 +25,8 @@ class Game(pygame.sprite.Sprite):
         # - Window related dynamic attribute
         self.vsync = True
         self.aspect_ratio = '16:9'
-        self.width = 1280
-        self.height = 720
+        self.width = width
+        self.height = height
         self.type = 'OpenGL'
         self.flags = pygame.DOUBLEBUF | pygame.HWSURFACE
 
@@ -62,7 +62,7 @@ class Game(pygame.sprite.Sprite):
 
 
     # - Method to update the screen with delta time
-    def DeltaClock(self):
+    def CustardClock(self):
         # - Do delta time calculations
         self.now = time.time()
         self.delta_time = self.now - self.prev_time
@@ -117,6 +117,11 @@ class Game(pygame.sprite.Sprite):
     def SetRunning(self, running):
         self.running = running
 
+    # - Set if the game is paused method
+    def SetPaused(self, paused):
+        self.paused = paused
+
+    # - Get the previous delta time
     def GetPrevTime(self):
         self.prev_time = time.time()
 
