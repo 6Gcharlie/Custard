@@ -1,14 +1,15 @@
 # - Required modules for custard.py
 import pygame
 import time
+import os
 from OpenGL.GL import *
 
 
 
-# - The game class is used for general game data/functionality
-class Game(pygame.sprite.Sprite):
+# - The Application class is used for general window data/functionality
+class Application(pygame.sprite.Sprite):
     # - Initialise the object
-    def __init__(self, width, height):
+    def __init__(self, dimensions):
         # - Define static attribute
         self.running = True
         self.paused = False
@@ -18,15 +19,15 @@ class Game(pygame.sprite.Sprite):
         # - Define general dynamic attribute
         self.fps = 60
         self.loop = 'window test'
-        self.tick = 'NA'
+        self.tick = 'loose'
         self.path = 'assets/original/'
         self.texID = None
 
         # - Window related dynamic attribute
-        self.vsync = True
+        self.vsync = False
         self.aspect_ratio = '16:9'
-        self.width = width
-        self.height = height
+        self.width = dimensions[0]
+        self.height = dimensions[1]
         self.type = 'OpenGL'
         self.flags = pygame.DOUBLEBUF | pygame.HWSURFACE
 
@@ -49,33 +50,6 @@ class Game(pygame.sprite.Sprite):
 
 
 
-    # - Method to create a surface
-    def SetGameSurface(self, caption):
-        if (self.type == 'OpenGL'):
-            pygame.display.set_mode([self.width, self.height], pygame.OPENGL | self.flags, self.vsync)
-            info = pygame.display.Info()
-            Custard_OpenGL_Configuration(info)
-            self.texID = glGenTextures(1)
-            self.surface = pygame.Surface([self.width, self.height])
-            pygame.display.set_caption(caption)
-
-
-
-    # - Method to update the screen with delta time
-    def CustardClock(self):
-        # - Do delta time calculations
-        self.now = time.time()
-        self.delta_time = self.now - self.prev_time
-        self.prev_time = self.now
-
-        # - Update the clock
-        if (self.tick == 'busy'):
-            self.clock.tick_busy_loop(self.fps)
-        else:
-            self.clock.tick(self.fps)
-
-
-
     def events(self, event):
         match event.type:
             case pygame.QUIT:
@@ -88,6 +62,8 @@ class Game(pygame.sprite.Sprite):
                             self.paused = False
                         else:
                             self.paused = True
+                    case 48:
+                        self.SetDynamicFPS()
                     case _:
                         print('Key pressed: ' + str(event.key))
 
@@ -98,6 +74,56 @@ class Game(pygame.sprite.Sprite):
         if (self.type == 'OpenGL'):
             Custard_OpenGL_Blit(self.surface, self.texID)
             pygame.display.flip()
+
+
+
+    # - Method to create a surface
+    def SetGameSurface(self, caption):
+        if (self.type == 'OpenGL'):
+            pygame.display.set_mode([self.width, self.height], pygame.OPENGL | self.flags, self.vsync)
+            info = pygame.display.Info()
+            Custard_OpenGL_Configuration(info)
+            self.texID = glGenTextures(1)
+            self.surface = pygame.Surface([self.width, self.height])
+            pygame.display.set_caption(caption)
+
+
+
+    def SetDynamicFPS(self):
+        setting_clock = True
+        font = pygame.font.Font(os.path.join(self.path + 'fonts/pcsenior.ttf'), int(round(self.width / 80, 0)))
+        tick_list = []
+        while setting_clock:
+            if (self.clock.get_fps != 0.0):
+                tick_list.append(self.clock.get_fps())
+                if (len(tick_list) == 200):
+                    tick_list.sort()
+                    self.fps = int(round(tick_list[25], 0) - 30)
+                    setting_clock = False
+                else:
+                    self.surface.fill([55,  55,  55])
+                    text = font.render('Getting Dynamic FPS: ' + str(len(tick_list)), True, self.slate_colour)
+                    text_w, text_h = text.get_size()
+                    self.surface.blit(text, [self.width / 2 - text_w / 2, self.height / 2 - text_h / 2])
+                    Custard_OpenGL_Blit(self.surface, self.texID)
+                    pygame.display.flip()
+                    self.clock.tick()
+
+
+
+    # - Method to update the screen with delta time
+    def CustardClock(self):
+        # - Do delta time calculations
+        self.now = time.time()
+        self.delta_time = self.now - self.prev_time
+        self.prev_time = self.now
+
+        # - Update with frame rate cap if one is set
+        match self.tick:
+            case 'busy':
+                self.clock.tick_busy_loop(self.fps)
+            case 'loose':
+                 self.clock.tick(self.fps)
 
 
 
@@ -121,6 +147,13 @@ class Game(pygame.sprite.Sprite):
     def SetPaused(self, paused):
         self.paused = paused
 
+    # - Set the FPS to a number passed into the method
+    def SetFPS(self, FPS):
+        self.fps = FPS
+
+    def SetTick(self, tick):
+        self.tick = tick
+
     # - Get the previous delta time
     def GetPrevTime(self):
         self.prev_time = time.time()
@@ -139,7 +172,7 @@ def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
 
             if (len(tick_list) == 100):
                 tick_list.sort()
-                fps = int(round(tick_list[25], 0) - 10)
+                fps = int(round(tick_list[25], 0) - 30)
                 setting_clock = False
             else:
                 print(clock.get_fps())
