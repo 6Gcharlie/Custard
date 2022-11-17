@@ -72,7 +72,7 @@ class pause_menu(pygame.sprite.Sprite):
                                     game.SetLoop('restart')
                                     game.SetPaused(False)
                                 case 2:
-                                    game.setFPS(30)
+                                    game.SetFPS(30)
                                 case 3:
                                     game.SetFPS(60)
                                 case 4:
