@@ -4,9 +4,9 @@ import os
 # - Create the pause menu object
 class pause_menu(pygame.sprite.Sprite):
     def __init__(self, game):
-        # - Statis pause menu attributes
+        # - Static pause menu attributes
+        # - TODO : rename 'self.flag', 'self.option_selected' & 'self.option_selected'
         self.visible = False
-        self.menu = 'main'
         self.option_selected = 0
         self.flag = False
         self.counter = 0
@@ -23,6 +23,7 @@ class pause_menu(pygame.sprite.Sprite):
         self.names = []
         self.names.append('Resume')
         self.names.append('Restart')
+        self.names.append('15 FPS')
         self.names.append('30 FPS')
         self.names.append('60 FPS')
         self.names.append('Dynamic FPS')
@@ -72,14 +73,16 @@ class pause_menu(pygame.sprite.Sprite):
                                     game.SetLoop('restart')
                                     game.SetPaused(False)
                                 case 2:
-                                    game.SetFPS(30)
+                                    game.SetFPS(15)
                                 case 3:
-                                    game.SetFPS(60)
+                                    game.SetFPS(30)
                                 case 4:
-                                    game.SetDynamicFPS()
+                                    game.SetFPS(60)
                                 case 5:
-                                    game.SetTick('NA')
+                                    game.SetDynamicFPS()
                                 case 6:
+                                    game.SetTick('NA')
+                                case 7:
                                     game.SetTick('loose')
                     case 27:
                         if (self.visible):

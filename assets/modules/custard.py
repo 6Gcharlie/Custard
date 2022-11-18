@@ -160,31 +160,6 @@ class Application(pygame.sprite.Sprite):
 
 
 
-# - This function is used to get a dynamic FPS value
-def Custard_Set_Clock(clock, offscreen_surface, Custard_OpenGL_Blit, texID):
-    setting_clock = True
-    tick_list = []
-    while setting_clock:
-
-        if (clock.get_fps != 0.0):
-
-            tick_list.append(clock.get_fps())
-
-            if (len(tick_list) == 100):
-                tick_list.sort()
-                fps = int(round(tick_list[25], 0) - 30)
-                setting_clock = False
-            else:
-                print(clock.get_fps())
-                offscreen_surface.fill([55,  55,  55])
-                Custard_OpenGL_Blit(offscreen_surface, texID)
-                pygame.display.flip()
-                clock.tick()
-
-    return fps
-
-
-
 # - This function is used to configure a surface for OpenGL
 def Custard_OpenGL_Configuration(info):
     # - Configure the OpenGL window
