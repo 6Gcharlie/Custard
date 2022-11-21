@@ -60,11 +60,16 @@ class developer_info(pygame.sprite.Sprite):
 
 
 
-    def update(self, clock):
+    def update(self, game):
         # - Update fields
-        self.dynamic_stats[0] = self.font.render('FPS:          ' + str(round(clock.get_fps(), 1)), True, self.text_colour)
-        self.dynamic_stats[1] = self.font.render('Tick:         ' + str(round(clock.get_time(), 4)) + 'ms', True, self.text_colour)
-        self.dynamic_stats[2] = self.font.render('Raw tick:     ' + str(round(clock.get_rawtime(), 4)) + 'ms', True, self.text_colour)
+        if (game.tick == 'loose' or game.tick == 'busy'):
+            self.dynamic_stats[0] = self.font.render('FPS:          ' + str(round(game.clock.get_fps(), 1)), True, self.text_colour)
+            self.dynamic_stats[1] = self.font.render('Tick:         ' + str(round(game.clock.get_time(), 4)) + 'ms', True, self.text_colour)
+            self.dynamic_stats[2] = self.font.render('Raw tick:     ' + str(round(game.clock.get_rawtime(), 4)) + 'ms', True, self.text_colour)
+        else:
+            self.dynamic_stats[0] = self.font.render('FPS:          ' + 'No FPS cap', True, self.text_colour)
+            self.dynamic_stats[1] = self.font.render('Tick:         ' + 'No FPS padding', True, self.text_colour)
+            self.dynamic_stats[2] = self.font.render('Raw tick:     ' + str(round(game.delta_time, 4)) + 'ms', True, self.text_colour)
 
         pygame.draw.rect(self.image, self.background_colour, [0, self.dynamic_height, 300, 150])
         for stat in self.dynamic_stats:

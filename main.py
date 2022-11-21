@@ -24,6 +24,7 @@ if (__name__ == '__main__'):
                 WindowTestEnvironment(game)
             case 'restart':
                 game.SetLoop('window test')
+                game.SetTick('loose')
                 game.SetFPS(60)
     
     pygame.quit()

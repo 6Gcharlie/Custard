@@ -35,7 +35,7 @@ def WindowTestEnvironment(game):
 
 
         # - Game logic is processed here
-        developer_obj.update(game.clock)
+        developer_obj.update(game)
         pause_obj.update(game)
 
         if (game.paused == False):
