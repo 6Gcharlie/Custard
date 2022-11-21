@@ -16,14 +16,12 @@ class Application(pygame.sprite.Sprite):
         self.clock = pygame.time.Clock()
         self.surface = None
 
-        # - Define general dynamic attribute
+        # - Define dynamic attributes
         self.fps = 60
         self.loop = 'window test'
         self.tick = 'loose'
         self.path = 'assets/original/'
         self.texID = None
-
-        # - Window related dynamic attribute
         self.vsync = False
         self.aspect_ratio = '16:9'
         self.width = dimensions[0]
@@ -74,6 +72,22 @@ class Application(pygame.sprite.Sprite):
         if (self.type == 'OpenGL'):
             Custard_OpenGL_Blit(self.surface, self.texID)
             pygame.display.flip()
+
+
+
+    # - Restart the application
+    def restart(self):
+        self.paused = False
+        self.fps = 60
+        self.loop = 'restart'
+        self.tick = 'loose'
+
+
+
+    # - Exit the application
+    def exit(self):
+        self.running = False
+        self.loop = False
 
 
 

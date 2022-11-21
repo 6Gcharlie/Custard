@@ -64,14 +64,10 @@ class pause_menu(pygame.sprite.Sprite):
                     case 13:
                         if (self.visible):
                             match self.option_selected:
-                                case self.exit_num:
-                                    game.SetLoop('NA')
-                                    game.SetRunning(False)
                                 case 0:
-                                    self.ClosePauseMenu()
+                                    self.ClosePauseMenu(game)
                                 case 1:
-                                    game.SetLoop('restart')
-                                    game.SetPaused(False)
+                                    game.restart()
                                 case 2:
                                     game.SetFPS(15)
                                 case 3:
@@ -84,18 +80,26 @@ class pause_menu(pygame.sprite.Sprite):
                                     game.SetTick('NA')
                                 case 7:
                                     game.SetTick('loose')
+                                case self.exit_num:
+                                    game.exit()
                     case 27:
                         if (self.visible):
-                            self.ClosePauseMenu()
+                            self.ClosePauseMenu(game)
                         else:
                             self.visible = True
                     case 119:
-                        if (self.visible and self.option_selected > 0): 
-                            self.option_selected -= 1
+                        if (self.visible):
+                            if (self.option_selected > 0): 
+                                self.option_selected -= 1
+                            else:
+                                self.option_selected = self.exit_num
                             self.flag = True
                     case 115:
-                        if (self.visible and self.option_selected < self.exit_num):
-                            self.option_selected += 1
+                        if (self.visible):
+                            if (self.option_selected < self.exit_num):
+                                self.option_selected += 1
+                            else:
+                                self.option_selected = 0
                             self.flag = True
     
 
@@ -126,7 +130,8 @@ class pause_menu(pygame.sprite.Sprite):
         if (self.visible):
             surface.blit(self.image, [0, 0])
 
-    def ClosePauseMenu(self):
+    def ClosePauseMenu(self, game):
+        game.paused = False
         self.visible = False
         self.option_selected = 0
         self.menu = 'main'
