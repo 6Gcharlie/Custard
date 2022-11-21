@@ -2,7 +2,7 @@
 import pygame
 from OpenGL.GL import *
 from assets.modules.custard import *
-from assets.scripts.window_test import *
+from assets.loops.window_test import *
 
 # - Initialise modules
 pygame.init()
@@ -24,6 +24,5 @@ if (__name__ == '__main__'):
                 WindowTestEnvironment(game)
             case 'restart':
                 game.SetLoop('window test')
-                game.SetFPS(60)
     
     pygame.quit()
