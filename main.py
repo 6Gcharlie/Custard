@@ -1,8 +1,7 @@
 # - Import all necessary modules
 import pygame
-from OpenGL.GL import *
-from assets.modules.custard import *
-from assets.loops.window_test import *
+from assets.modules.custard import Application
+from assets.loops.window_test import WindowTestEnvironment
 
 # - Initialise modules
 pygame.init()
@@ -12,7 +11,7 @@ pygame.display.init()
 
 # - Create game object
 game = Application([1280, 720])
-game.SetGameSurface('Stone Heart')
+game.set_game_surface('Stone Heart')
 
 
 

@@ -1,13 +1,16 @@
-# - Required modules for custard.py
-import pygame
-import time
+"""
+The custard module is used to manage all game related functions and data.
+"""
+# - Standard module imports should be placed before new import installs
 import os
-from OpenGL.GL import *
+import time
+import pygame
+import OpenGL.GL
 
 
 
-# - The Application class is used for general window data/functionality
 class Application(pygame.sprite.Sprite):
+    "The Application class is used for general window data/functionality"
     # - Initialise the object
     def __init__(self, dimensions):
         # - Define static attribute
@@ -21,7 +24,7 @@ class Application(pygame.sprite.Sprite):
         self.loop = 'window test'
         self.tick = 'loose'
         self.path = 'assets/original/'
-        self.texID = None
+        self.tex_id = None
         self.vsync = False
         self.aspect_ratio = '16:9'
         self.width = dimensions[0]
@@ -49,6 +52,7 @@ class Application(pygame.sprite.Sprite):
 
 
     def events(self, event):
+        "The events method is resposible for the event listeners for the application class"
         match event.type:
             case pygame.QUIT:
                 self.SetLoop('NA')
@@ -56,10 +60,7 @@ class Application(pygame.sprite.Sprite):
             case pygame.KEYDOWN:
                 match event.key:
                     case 27:
-                        if (self.paused):
-                            self.paused = False
-                        else:
-                            self.paused = True
+                        self.paused = False if self.paused else True
                     case 48:
                         self.SetDynamicFPS()
                     case _:
@@ -67,16 +68,17 @@ class Application(pygame.sprite.Sprite):
 
 
 
-    # - Draw screen
     def draw(self):
+        "This method draws the application surface to the window"
         if (self.type == 'OpenGL'):
-            Custard_OpenGL_Blit(self.surface, self.texID)
+            Custard_OpenGL_Blit(self.surface, self.tex_id)
             pygame.display.flip()
 
 
 
     # - Restart the application
     def restart(self):
+        "This method resets all application variables back to default"
         self.paused = False
         self.fps = 60
         self.loop = 'restart'
@@ -86,18 +88,20 @@ class Application(pygame.sprite.Sprite):
 
     # - Exit the application
     def exit(self):
+        "This method ends the game and closes the window"
         self.running = False
         self.loop = False
 
 
 
     # - Method to create a surface
-    def SetGameSurface(self, caption):
+    def set_game_surface(self, caption):
+        "This method creates the window & window surface for graphics to be drawn onto"
         if (self.type == 'OpenGL'):
             pygame.display.set_mode([self.width, self.height], pygame.OPENGL | self.flags, self.vsync)
             info = pygame.display.Info()
             Custard_OpenGL_Configuration(info)
-            self.texID = glGenTextures(1)
+            self.tex_id = OpenGL.GL.glGenTextures(1)
             self.surface = pygame.Surface([self.width, self.height])
             pygame.display.set_caption(caption)
 
@@ -119,7 +123,7 @@ class Application(pygame.sprite.Sprite):
                     text = font.render('Getting Dynamic FPS: ' + str(len(tick_list)), True, self.slate_colour)
                     text_w, text_h = text.get_size()
                     self.surface.blit(text, [self.width / 2 - text_w / 2, self.height / 2 - text_h / 2])
-                    Custard_OpenGL_Blit(self.surface, self.texID)
+                    Custard_OpenGL_Blit(self.surface, self.tex_id)
                     pygame.display.flip()
                     self.clock.tick()
 
@@ -137,17 +141,13 @@ class Application(pygame.sprite.Sprite):
             case 'busy':
                 self.clock.tick_busy_loop(self.fps)
             case 'loose':
-                 self.clock.tick(self.fps)
+                self.clock.tick(self.fps)
 
 
 
-    # - Set the TexID method
-    def SetTexID(self, texID):
-        self.texID = texID
-
-    # - Set the fps method
-    def SetFPS(self, FPS):
-        self.fps = FPS
+    # - Set the tex_id method
+    def Settex_id(self, tex_id):
+        self.tex_id = tex_id
 
     # - Set the game loop method
     def SetLoop(self, loop):
@@ -177,52 +177,52 @@ class Application(pygame.sprite.Sprite):
 # - This function is used to configure a surface for OpenGL
 def Custard_OpenGL_Configuration(info):
     # - Configure the OpenGL window
-    glViewport(0, 0, info.current_w, info.current_h)
-    glDepthRange(0, 1)
-    glMatrixMode(GL_PROJECTION)
-    glMatrixMode(GL_MODELVIEW)
-    glLoadIdentity()
-    glShadeModel(GL_SMOOTH)
-    glClearColor(0.0, 0.0, 0.0, 0.0)
-    glClearDepth(1.0)
-    glDisable(GL_DEPTH_TEST)
-    glDisable(GL_LIGHTING)
-    glDepthFunc(GL_LEQUAL)
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-    glEnable(GL_BLEND)
+    OpenGL.GL.glViewport(0, 0, info.current_w, info.current_h)
+    OpenGL.GL.glDepthRange(0, 1)
+    OpenGL.GL.glMatrixMode(OpenGL.GL.GL_PROJECTION)
+    OpenGL.GL.glMatrixMode(OpenGL.GL.GL_MODELVIEW)
+    OpenGL.GL.glLoadIdentity()
+    OpenGL.GL.glShadeModel(OpenGL.GL.GL_SMOOTH)
+    OpenGL.GL.glClearColor(0.0, 0.0, 0.0, 0.0)
+    OpenGL.GL.glClearDepth(1.0)
+    OpenGL.GL.glDisable(OpenGL.GL.GL_DEPTH_TEST)
+    OpenGL.GL.glDisable(OpenGL.GL.GL_LIGHTING)
+    OpenGL.GL.glDepthFunc(OpenGL.GL.GL_LEQUAL)
+    OpenGL.GL.glHint(OpenGL.GL.GL_PERSPECTIVE_CORRECTION_HINT, OpenGL.GL.GL_NICEST)
+    OpenGL.GL.glEnable(OpenGL.GL.GL_BLEND)
 
 
 
 # - TODO: Optimise this? Not all these operations might be necessary
-def Custard_Surface_To_Texture(pygame_surface, texID):
+def Custard_Surface_To_Texture(pygame_surface, tex_id):
     # - Function to convert a Pygame Surface to an OpenGL Texture
     rgb_surface = pygame.image.tostring( pygame_surface, 'RGB')
-    glBindTexture(GL_TEXTURE_2D, texID)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
+    OpenGL.GL.glBindTexture(OpenGL.GL.GL_TEXTURE_2D, tex_id)
+    OpenGL.GL.glTexParameteri(OpenGL.GL.GL_TEXTURE_2D, OpenGL.GL.GL_TEXTURE_MAG_FILTER, OpenGL.GL.GL_NEAREST)
+    OpenGL.GL.glTexParameteri(OpenGL.GL.GL_TEXTURE_2D, OpenGL.GL.GL_TEXTURE_MIN_FILTER, OpenGL.GL.GL_NEAREST)
+    OpenGL.GL.glTexParameteri(OpenGL.GL.GL_TEXTURE_2D, OpenGL.GL.GL_TEXTURE_WRAP_S, OpenGL.GL.GL_CLAMP)
+    OpenGL.GL.glTexParameteri(OpenGL.GL.GL_TEXTURE_2D, OpenGL.GL.GL_TEXTURE_WRAP_T, OpenGL.GL.GL_CLAMP)
     surface_rect = pygame_surface.get_rect()
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, surface_rect.width, surface_rect.height, 0, GL_RGB, GL_UNSIGNED_BYTE, rgb_surface)
-    glGenerateMipmap(GL_TEXTURE_2D)
-    glBindTexture(GL_TEXTURE_2D, 0)
+    OpenGL.GL.glTexImage2D(OpenGL.GL.GL_TEXTURE_2D, 0, OpenGL.GL.GL_RGB, surface_rect.width, surface_rect.height, 0, OpenGL.GL.GL_RGB, OpenGL.GL.GL_UNSIGNED_BYTE, rgb_surface)
+    OpenGL.GL.glGenerateMipmap(OpenGL.GL.GL_TEXTURE_2D)
+    OpenGL.GL.glBindTexture(OpenGL.GL.GL_TEXTURE_2D, 0)
 
 
 
 # - Convert SDL surface to OpenGL texture
-def Custard_OpenGL_Blit(pygame_surface, texID):
+def Custard_OpenGL_Blit(pygame_surface, tex_id):
     # - Prepare to render the texture-mapped rectangle
-    glClear(GL_COLOR_BUFFER_BIT)
-    glLoadIdentity()
-    glDisable(GL_LIGHTING)
-    glEnable(GL_TEXTURE_2D)
+    OpenGL.GL.glClear(OpenGL.GL.GL_COLOR_BUFFER_BIT)
+    OpenGL.GL.glLoadIdentity()
+    OpenGL.GL.glDisable(OpenGL.GL.GL_LIGHTING)
+    OpenGL.GL.glEnable(OpenGL.GL.GL_TEXTURE_2D)
 
     # - Turn the 'offscreen_surface' into a OpenGL Texture
-    Custard_Surface_To_Texture(pygame_surface, texID)
-    glBindTexture(GL_TEXTURE_2D, texID)
-    glBegin(GL_QUADS)
-    glTexCoord2f(0, 0); glVertex2f(-1, 1)
-    glTexCoord2f(0, 1); glVertex2f(-1, -1)
-    glTexCoord2f(1, 1); glVertex2f(1, -1)
-    glTexCoord2f(1, 0); glVertex2f(1, 1)
-    glEnd()
+    Custard_Surface_To_Texture(pygame_surface, tex_id)
+    OpenGL.GL.glBindTexture(OpenGL.GL.GL_TEXTURE_2D, tex_id)
+    OpenGL.GL.glBegin(OpenGL.GL.GL_QUADS)
+    OpenGL.GL.glTexCoord2f(0, 0); OpenGL.GL.glVertex2f(-1, 1)
+    OpenGL.GL.glTexCoord2f(0, 1); OpenGL.GL.glVertex2f(-1, -1)
+    OpenGL.GL.glTexCoord2f(1, 1); OpenGL.GL.glVertex2f(1, -1)
+    OpenGL.GL.glTexCoord2f(1, 0); OpenGL.GL.glVertex2f(1, 1)
+    OpenGL.GL.glEnd()
