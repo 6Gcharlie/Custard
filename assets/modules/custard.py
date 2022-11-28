@@ -1,33 +1,38 @@
-# - Required modules for custard.py
-import pygame
-import time
+"""
+The custard module is used to manage all game related functions and data.
+"""
+# - Standard module imports should be placed before new import installs
 import os
-from OpenGL.GL import *
+import time
+import pygame
+import OpenGL.GL as gl
 
 
 
-# - The Application class is used for general window data/functionality
 class Application(pygame.sprite.Sprite):
+    "The Application class is used for general window data/functionality"
     # - Initialise the object
-    def __init__(self, dimensions):
+    def __init__(self, attributes):
         # - Define static attribute
-        self.running = True
-        self.paused = False
-        self.clock = pygame.time.Clock()
-        self.surface = None
+        self.running = attributes['running']
+        self.paused = attributes['paused']
+        self.clock = attributes['clock']
+        self.surface = attributes['surface']
 
         # - Define dynamic attributes
-        self.fps = 60
-        self.loop = 'window test'
-        self.tick = 'loose'
-        self.path = 'assets/original/'
-        self.texID = None
-        self.vsync = False
-        self.aspect_ratio = '16:9'
-        self.width = dimensions[0]
-        self.height = dimensions[1]
-        self.type = 'OpenGL'
-        self.flags = pygame.DOUBLEBUF | pygame.HWSURFACE
+        self.fps = attributes['fps']
+        self.loop = attributes['loop']
+        self.tick = attributes['tick']
+        self.path = attributes['path']
+        self.tex_id = attributes['tex_id']
+        self.vsync = attributes['vsync']
+        self.width = attributes['dimensions'][0]
+        self.height = attributes['dimensions'][1]
+        self.type = attributes['type']
+
+        # - 'DOUBLEBUF' is equal to '1073741824'
+        # - 'HWSURFACE' is equal to '1'
+        self.flags = 1073741824 | 1
 
         # - Game volume dynamic attribute
         self.master_volume = 100
@@ -49,34 +54,35 @@ class Application(pygame.sprite.Sprite):
 
 
     def events(self, event):
+        "The events method is resposible for the event listeners for the application class"
         match event.type:
-            case pygame.QUIT:
-                self.SetLoop('NA')
-                self.SetRunning(False)
-            case pygame.KEYDOWN:
+            # - Event '256' is 'pygame.QUIT'
+            case 256:
+                self.set_loop('NA')
+                self.set_running(False)
+            # - Event '768' is 'pygame.KEYDOWN'
+            case 768:
                 match event.key:
                     case 27:
-                        if (self.paused):
-                            self.paused = False
-                        else:
-                            self.paused = True
+                        self.paused = False if self.paused else True
                     case 48:
-                        self.SetDynamicFPS()
+                        self.set_dynamic_fps()
                     case _:
                         print('Key pressed: ' + str(event.key))
 
 
 
-    # - Draw screen
     def draw(self):
-        if (self.type == 'OpenGL'):
-            Custard_OpenGL_Blit(self.surface, self.texID)
+        "This method draws the application surface to the window"
+        if self.type == 'OpenGL':
+            custard_opengl_blit(self.surface, self.tex_id)
             pygame.display.flip()
 
 
 
     # - Restart the application
     def restart(self):
+        "This method resets all application variables back to default"
         self.paused = False
         self.fps = 60
         self.loop = 'restart'
@@ -86,47 +92,55 @@ class Application(pygame.sprite.Sprite):
 
     # - Exit the application
     def exit(self):
+        "This method ends the game and closes the window"
         self.running = False
         self.loop = False
 
 
 
     # - Method to create a surface
-    def SetGameSurface(self, caption):
-        if (self.type == 'OpenGL'):
-            pygame.display.set_mode([self.width, self.height], pygame.OPENGL | self.flags, self.vsync)
+    def set_game_surface(self, caption):
+        "This method creates the window & window surface for graphics to be drawn onto"
+        if self.type == 'OpenGL':
+            # - 'pygame.OPENL' is equal to '2' as a flag
+            pygame.display.set_mode([self.width, self.height], 2 | self.flags, self.vsync)
             info = pygame.display.Info()
-            Custard_OpenGL_Configuration(info)
-            self.texID = glGenTextures(1)
+            custard_opengl_configuration(info)
+            self.tex_id = gl.glGenTextures(1)
             self.surface = pygame.Surface([self.width, self.height])
             pygame.display.set_caption(caption)
 
 
 
-    def SetDynamicFPS(self):
+    def set_dynamic_fps(self):
+        "Counts to 200 rapidly; Then it will take the mean average speed and set it as an FPS cap"
         setting_clock = True
-        font = pygame.font.Font(os.path.join(self.path + 'fonts/pcsenior.ttf'), int(round(self.width / 80, 0)))
+        dynamic_font_size = int(round(self.width / 80, 0))
+        font = pygame.font.Font(os.path.join(self.path + 'fonts/pcsenior.ttf'), dynamic_font_size)
         tick_list = []
         while setting_clock:
-            if (self.clock.get_fps != 0.0):
+            if self.clock.get_fps != 0.0:
                 tick_list.append(self.clock.get_fps())
-                if (len(tick_list) == 200):
+                if len(tick_list) == 200:
                     tick_list.sort()
                     self.fps = int(round(tick_list[25], 0) - 30)
                     setting_clock = False
                 else:
                     self.surface.fill([55,  55,  55])
-                    text = font.render('Getting Dynamic FPS: ' + str(len(tick_list)), True, self.slate_colour)
+                    tick_length = str(len(tick_list))
+                    text = font.render('Get FPS: ' + tick_length + '/200', True, self.slate_colour)
                     text_w, text_h = text.get_size()
-                    self.surface.blit(text, [self.width / 2 - text_w / 2, self.height / 2 - text_h / 2])
-                    Custard_OpenGL_Blit(self.surface, self.texID)
+                    screen_center = [self.width / 2 - text_w / 2, self.height / 2 - text_h / 2]
+                    self.surface.blit(text, screen_center)
+                    custard_opengl_blit(self.surface, self.tex_id)
                     pygame.display.flip()
                     self.clock.tick()
 
 
 
     # - Method to update the screen with delta time
-    def CustardClock(self):
+    def custard_clock(self):
+        "Custard clock uses delta time to update the game window"
         # - Do delta time calculations
         self.now = time.time()
         self.delta_time = self.now - self.prev_time
@@ -137,92 +151,105 @@ class Application(pygame.sprite.Sprite):
             case 'busy':
                 self.clock.tick_busy_loop(self.fps)
             case 'loose':
-                 self.clock.tick(self.fps)
+                self.clock.tick(self.fps)
 
 
 
-    # - Set the TexID method
-    def SetTexID(self, texID):
-        self.texID = texID
-
-    # - Set the fps method
-    def SetFPS(self, FPS):
-        self.fps = FPS
+    # - Set the tex_id method
+    def set_tex_id(self, tex_id):
+        "Set the 'tex_id' for OpenGL so it can blit correctly"
+        self.tex_id = tex_id
 
     # - Set the game loop method
-    def SetLoop(self, loop):
+    def set_loop(self, loop):
+        "Pass a string of the desired loop to play into this method"
         self.loop = loop
 
     # - Set the 'running' attribute, method
-    def SetRunning(self, running):
+    def set_running(self, running):
+        "Pass a 'False' boolean into this method to end the game loop"
         self.running = running
 
     # - Set if the game is paused method
-    def SetPaused(self, paused):
+    def set_paused(self, paused):
+        "Pass a boolean into this method to pause/unpause the game"
         self.paused = paused
 
     # - Set the FPS to a number passed into the method
-    def SetFPS(self, FPS):
-        self.fps = FPS
+    def set_fps(self, fps):
+        "Pass an integer into this method to set it as the desired FPS"
+        self.fps = fps
 
-    def SetTick(self, tick):
+    def set_tick(self, tick):
+        "Set the tick type: ('Loose', 'Busy', or 'NA')"
         self.tick = tick
 
     # - Get the previous delta time
-    def GetPrevTime(self):
+    def get_prev_time(self):
+        "Get the current time in delta time"
         self.prev_time = time.time()
 
 
 
 # - This function is used to configure a surface for OpenGL
-def Custard_OpenGL_Configuration(info):
+def custard_opengl_configuration(info):
+    "Configure the game window for OpenGL operations"
     # - Configure the OpenGL window
-    glViewport(0, 0, info.current_w, info.current_h)
-    glDepthRange(0, 1)
-    glMatrixMode(GL_PROJECTION)
-    glMatrixMode(GL_MODELVIEW)
-    glLoadIdentity()
-    glShadeModel(GL_SMOOTH)
-    glClearColor(0.0, 0.0, 0.0, 0.0)
-    glClearDepth(1.0)
-    glDisable(GL_DEPTH_TEST)
-    glDisable(GL_LIGHTING)
-    glDepthFunc(GL_LEQUAL)
-    glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST)
-    glEnable(GL_BLEND)
+    gl.glViewport(0, 0, info.current_w, info.current_h)
+    gl.glDepthRange(0, 1)
+    gl.glMatrixMode(gl.GL_PROJECTION)
+    gl.glMatrixMode(gl.GL_MODELVIEW)
+    gl.glLoadIdentity()
+    gl.glShadeModel(gl.GL_SMOOTH)
+    gl.glClearColor(0.0, 0.0, 0.0, 0.0)
+    gl.glClearDepth(1.0)
+    gl.glDisable(gl.GL_DEPTH_TEST)
+    gl.glDisable(gl.GL_LIGHTING)
+    gl.glDepthFunc(gl.GL_LEQUAL)
+    gl.glHint(gl.GL_PERSPECTIVE_CORRECTION_HINT, gl.GL_NICEST)
+    gl.glEnable(gl.GL_BLEND)
 
 
 
 # - TODO: Optimise this? Not all these operations might be necessary
-def Custard_Surface_To_Texture(pygame_surface, texID):
+def custard_surface_to_texture(pygame_surface, tex_id):
+    "Converts an SDL2 surface into an OpenGL texture for faster blits & filter support"
     # - Function to convert a Pygame Surface to an OpenGL Texture
-    rgb_surface = pygame.image.tostring( pygame_surface, 'RGB')
-    glBindTexture(GL_TEXTURE_2D, texID)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
-    surface_rect = pygame_surface.get_rect()
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, surface_rect.width, surface_rect.height, 0, GL_RGB, GL_UNSIGNED_BYTE, rgb_surface)
-    glGenerateMipmap(GL_TEXTURE_2D)
-    glBindTexture(GL_TEXTURE_2D, 0)
+    rgb = pygame.image.tostring( pygame_surface, 'RGB')
+    gl.glBindTexture(gl.GL_TEXTURE_2D, tex_id)
+    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MAG_FILTER, gl.GL_NEAREST)
+    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_MIN_FILTER, gl.GL_NEAREST)
+    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_S, gl.GL_CLAMP)
+    gl.glTexParameteri(gl.GL_TEXTURE_2D, gl.GL_TEXTURE_WRAP_T, gl.GL_CLAMP)
+
+    surf = pygame_surface.get_rect()
+    unsigned = gl.GL_UNSIGNED_BYTE
+    texture = gl.GL_TEXTURE_2D
+    gl.glTexImage2D(texture, 0, gl.GL_RGB, surf.width, surf.height, 0, gl.GL_RGB, unsigned, rgb)
+    gl.glGenerateMipmap(gl.GL_TEXTURE_2D)
+    gl.glBindTexture(gl.GL_TEXTURE_2D, 0)
 
 
 
 # - Convert SDL surface to OpenGL texture
-def Custard_OpenGL_Blit(pygame_surface, texID):
+def custard_opengl_blit(pygame_surface, tex_id):
+    "Draws the OpenGL texture to the screen by texturing it"
     # - Prepare to render the texture-mapped rectangle
-    glClear(GL_COLOR_BUFFER_BIT)
-    glLoadIdentity()
-    glDisable(GL_LIGHTING)
-    glEnable(GL_TEXTURE_2D)
+    gl.glClear(gl.GL_COLOR_BUFFER_BIT)
+    gl.glLoadIdentity()
+    gl.glDisable(gl.GL_LIGHTING)
+    gl.glEnable(gl.GL_TEXTURE_2D)
 
     # - Turn the 'offscreen_surface' into a OpenGL Texture
-    Custard_Surface_To_Texture(pygame_surface, texID)
-    glBindTexture(GL_TEXTURE_2D, texID)
-    glBegin(GL_QUADS)
-    glTexCoord2f(0, 0); glVertex2f(-1, 1)
-    glTexCoord2f(0, 1); glVertex2f(-1, -1)
-    glTexCoord2f(1, 1); glVertex2f(1, -1)
-    glTexCoord2f(1, 0); glVertex2f(1, 1)
-    glEnd()
+    custard_surface_to_texture(pygame_surface, tex_id)
+    gl.glBindTexture(gl.GL_TEXTURE_2D, tex_id)
+    gl.glBegin(gl.GL_QUADS)
+    gl.glTexCoord2f(0, 0)
+    gl.glVertex2f(-1, 1)
+    gl.glTexCoord2f(0, 1)
+    gl.glVertex2f(-1, -1)
+    gl.glTexCoord2f(1, 1)
+    gl.glVertex2f(1, -1)
+    gl.glTexCoord2f(1, 0)
+    gl.glVertex2f(1, 1)
+    gl.glEnd()
