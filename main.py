@@ -12,8 +12,18 @@ pygame.display.init()
 
 
 
+# - Set dynamic attributes for the 'Application' class
+application_attributes = {
+                            'running': True, 'paused': False,
+                            'clock': pygame.time.Clock(), 'surface': None,
+                            'fps': 60, 'loop': 'window test', 'tick': 'loose',
+                            'path': 'assets/original/', 'tex_id': None,
+                            'vsync': False, 'dimensions': [1280, 720],
+                            'type': 'OpenGL'
+                         }
+
 # - Create game object
-game = Application([1280, 720])
+game = Application(application_attributes)
 game.set_game_surface('Stone Heart')
 
 
@@ -25,6 +35,6 @@ if __name__ == '__main__':
             case 'window test':
                 WindowTestEnvironment(game)
             case 'restart':
-                game.SetLoop('window test')
+                game.set_loop('window test')
 
     pygame.display.quit()

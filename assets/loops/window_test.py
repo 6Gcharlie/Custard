@@ -9,9 +9,9 @@ from assets.modules.pause import *
 # - This loop is used for testing the responsiveness of the game window
 def WindowTestEnvironment(game):
     # - Create a variable for time keeping
-    game.GetPrevTime()
-    developer_obj = developer_info(game)
-    pause_obj = pause_menu(game)
+    game.get_prev_time()
+    developer_obj = Developer(game)
+    pause_obj = Pause(game)
 
     # - Race variables
     cube_one = Cube(game, 100, [100, 640])
@@ -24,7 +24,7 @@ def WindowTestEnvironment(game):
 
     while game.loop == 'window test':
         # - Delta time ticker
-        game.CustardClock()
+        game.custard_clock()
 
         # - Events are caught and processed here
         for event in pygame.event.get():

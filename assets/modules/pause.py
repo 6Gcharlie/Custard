@@ -1,8 +1,12 @@
-import pygame
+"""
+This module contains the pause class which provides a basic customisable pause menu
+"""
 import os
+import pygame
 
 # - Create the pause menu object
-class pause_menu(pygame.sprite.Sprite):
+class Pause(pygame.sprite.Sprite):
+    "The class handles all pause related functionality and blitting"
     def __init__(self, game):
         # - Static pause menu attributes
         # - TODO : rename 'self.flag', 'self.option_selected' & 'self.option_selected'
@@ -12,13 +16,14 @@ class pause_menu(pygame.sprite.Sprite):
         self.counter = 0
 
         # - Dynamic attributes for the pause menu
-        self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), int(round(game.width / 80, 0)))
+        font_size = int(round(game.width / 80, 0))
+        self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), font_size)
         self.image = pygame.Surface([game.width / 4, game.height / 2])
         self.row_height = int(round(game.height / 18, 0))
 
         # - Create information to be rendered
         self.title = self.font.render('Game paused', True, game.slate_colour)
-        
+
         # WARNING : resume must always be the FIRST item, and exit must be the LAST
         self.names = []
         self.names.append('Resume')
@@ -30,13 +35,13 @@ class pause_menu(pygame.sprite.Sprite):
         self.names.append('No FPS cap')
         self.names.append('Reinstate cap')
         self.names.append('Exit')
-        
+
         self.exit_num = len(self.names) - 1
 
         # - Render the information provided above
         self.options = []
         for name in self.names:
-            if (self.counter == 0):
+            if self.counter == 0:
                 self.options.append(self.font.render(' > ' + name, True, game.butter_colour))
             else:
                 self.options.append(self.font.render('   ' + name, True, game.slate_colour))
@@ -55,65 +60,68 @@ class pause_menu(pygame.sprite.Sprite):
 
         self.row_height = int(round(game.height / 18, 0))
 
-    
+
 
     def events(self, event, game):
+        "This method listens for and handles events specific to this class"
         match event.type:
             case pygame.KEYDOWN:
                 match event.key:
                     case 13:
-                        if (self.visible):
+                        if self.visible:
                             match self.option_selected:
                                 case 0:
-                                    self.ClosePauseMenu(game)
+                                    self.close_menu(game)
                                 case 1:
                                     game.restart()
                                 case 2:
-                                    game.SetFPS(15)
+                                    game.set_fps(15)
                                 case 3:
-                                    game.SetFPS(30)
+                                    game.set_fps(30)
                                 case 4:
-                                    game.SetFPS(60)
+                                    game.set_fps(60)
                                 case 5:
-                                    game.SetDynamicFPS()
+                                    game.set_dynamic_fps()
                                 case 6:
-                                    game.SetTick('NA')
+                                    game.set_tick('NA')
                                 case 7:
-                                    game.SetTick('loose')
+                                    game.set_tick('loose')
                                 case self.exit_num:
                                     game.exit()
                     case 27:
-                        if (self.visible):
-                            self.ClosePauseMenu(game)
+                        if self.visible:
+                            self.close_menu(game)
                         else:
                             self.visible = True
                     case 119:
-                        if (self.visible):
-                            if (self.option_selected > 0): 
+                        if self.visible:
+                            if self.option_selected > 0:
                                 self.option_selected -= 1
                             else:
                                 self.option_selected = self.exit_num
                             self.flag = True
                     case 115:
-                        if (self.visible):
-                            if (self.option_selected < self.exit_num):
+                        if self.visible:
+                            if self.option_selected < self.exit_num:
                                 self.option_selected += 1
                             else:
                                 self.option_selected = 0
                             self.flag = True
-    
+
 
 
     def update(self, game):
+        "This method updates the surface with new information when change is detected"
         if (self.flag and self.visible):
             self.image.fill(game.marble_colour)
             self.image.blit(self.title, [2, 2])
 
             for option in self.options:
-                if (self.counter == self.option_selected):
-                    option = self.font.render(' > ' + self.names[self.counter], True, game.butter_colour)
+                value = self.names[self.counter]
+                if self.counter == self.option_selected:
+                    option = self.font.render(' > ' + value, True, game.butter_colour)
                 else:
-                    option = self.font.render('   ' + self.names[self.counter], True, game.slate_colour)
+                    option = self.font.render('   ' + value, True, game.slate_colour)
 
                 self.image.blit(option, [2, self.row_height])
                 self.row_height += int(round(game.height / 36, 0))
@@ -127,12 +135,13 @@ class pause_menu(pygame.sprite.Sprite):
 
 
     def draw(self, surface):
-        if (self.visible):
+        "This method draws the pause menu onto the surface provided"
+        if self.visible:
             surface.blit(self.image, [0, 0])
 
-    def ClosePauseMenu(self, game):
+    def close_menu(self, game):
+        "This method hides the pause menu setting attributes to keep the change"
         game.paused = False
         self.visible = False
         self.option_selected = 0
-        self.menu = 'main'
         self.flag = True
