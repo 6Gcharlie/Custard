@@ -4,7 +4,7 @@ main.py is the executable file for the game being created, run this to run the g
 # - Import all necessary modules
 import pygame
 from assets.modules.custard import Application
-from assets.loops.window_test import WindowTestEnvironment
+from assets.loops.window_test import test_environment
 
 # - Initialise modules
 pygame.font.init()
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     while game.running:
         match game.loop:
             case 'window test':
-                WindowTestEnvironment(game)
+                test_environment(game)
             case 'restart':
                 game.set_loop('window test')
 
