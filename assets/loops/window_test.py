@@ -1,24 +1,32 @@
+"""
+The window test is a game loop for testing development features coming to the custard class
+"""
 # - Modules necessary for testing operation
+import os
 import pygame
-from OpenGL.GL import *
-from assets.modules.custard import *
-from assets.modules.developer import *
-from assets.scripts.cube import *
-from assets.modules.pause import *
+from assets.modules.pause import Pause
+from assets.modules.developer import Developer
+from assets.scripts.cube import Cube
+
+
 
 # - This loop is used for testing the responsiveness of the game window
-def WindowTestEnvironment(game):
+def test_environment(game):
+    "This game loop stores tests for me to trial frame rate and other features"
     # - Create a variable for time keeping
     game.get_prev_time()
     developer_obj = Developer(game)
     pause_obj = Pause(game)
+
+    line_coords = [game.width - 150, 590], [game.width - 150, 690]
 
     # - Race variables
     cube_one = Cube(game, 100, [100, 640])
     cube_two = Cube(game, 125, [100, 590])
     racing = False
     timer = 0
-    font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), int(round(game.width / 80, 0)))
+    font_size = int(round(game.width / 80, 0))
+    font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), font_size)
     text_1 = font.render('Press [Enter] to start the race', True, game.marble_colour)
     text_2 = font.render('!!!', True, game.marble_colour)
 
@@ -32,8 +40,9 @@ def WindowTestEnvironment(game):
             developer_obj.events(event)
             pause_obj.events(event, game)
 
-            if (not game.paused and not racing):
-                if (event.type == pygame.KEYDOWN and event.key == 13):
+            if not game.paused and not racing:
+                # - Event '768' is 'pygame.KEYDOWN'
+                if event.type == 768 and event.key == 13:
                     racing = True
 
 
@@ -43,12 +52,12 @@ def WindowTestEnvironment(game):
         pause_obj.update(game)
 
         # - All movement goes in here
-        if (not game.paused and racing):
+        if not game.paused and racing:
             timer += game.delta_time
-            if (cube_one.x < game.width - 150):
+            if cube_one.coord_x < game.width - 150:
                 cube_one.update(game)
                 text_2 = font.render('Cube 2: ' + str(round(timer, 2)), True, game.marble_colour)
-            if (cube_two.x < game.width - 150):
+            if cube_two.coord_x < game.width - 150:
                 cube_two.update(game)
                 text_1 = font.render('Cube 1: ' + str(round(timer, 2)), True, game.marble_colour)
 
@@ -60,7 +69,7 @@ def WindowTestEnvironment(game):
         game.surface.blit(text_1, [50, game.height / 4 * 3 - 20])
         cube_one.draw(game)
         cube_two.draw(game)
-        pygame.draw.line(game.surface, game.midnight_colour, [game.width - 150, 590], [game.width - 150, 690], 2)
+        pygame.draw.line(game.surface, game.midnight_colour, line_coords[0], line_coords[1], 2)
 
         # - Draw the screen
         developer_obj.draw(game.surface)

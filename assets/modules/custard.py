@@ -18,6 +18,7 @@ class Application(pygame.sprite.Sprite):
         self.paused = attributes['paused']
         self.clock = attributes['clock']
         self.surface = attributes['surface']
+        self.fullscreen = False
 
         # - Define dynamic attributes
         self.fps = attributes['fps']
@@ -135,6 +136,19 @@ class Application(pygame.sprite.Sprite):
                     custard_opengl_blit(self.surface, self.tex_id)
                     pygame.display.flip()
                     self.clock.tick()
+
+
+
+    def set_fullscreen(self, fullscreen):
+        "Toggles fullscreen for the game"
+        if fullscreen:
+            self.fullscreen = True
+            self.flags = -2147483648 | 1073741824 | 1
+        else:
+            self.fullscreen = False
+            self.flags = 1073741824 | 1
+
+        self.set_game_surface('Stone heart')
 
 
 

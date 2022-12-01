@@ -34,6 +34,7 @@ class Pause(pygame.sprite.Sprite):
         self.names.append('Dynamic FPS')
         self.names.append('No FPS cap')
         self.names.append('Reinstate cap')
+        self.names.append('Fullscreen')
         self.names.append('Exit')
 
         self.exit_num = len(self.names) - 1
@@ -65,7 +66,8 @@ class Pause(pygame.sprite.Sprite):
     def events(self, event, game):
         "This method listens for and handles events specific to this class"
         match event.type:
-            case pygame.KEYDOWN:
+            # - Event '768' is 'pygame.KEYDOWN'
+            case 768:
                 match event.key:
                     case 13:
                         if self.visible:
@@ -86,6 +88,11 @@ class Pause(pygame.sprite.Sprite):
                                     game.set_tick('NA')
                                 case 7:
                                     game.set_tick('loose')
+                                case 8:
+                                    if game.fullscreen:
+                                        game.set_fullscreen(False)
+                                    else:
+                                        game.set_fullscreen(True)
                                 case self.exit_num:
                                     game.exit()
                     case 27:
