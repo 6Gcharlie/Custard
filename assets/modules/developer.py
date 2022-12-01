@@ -43,7 +43,8 @@ class Developer(pygame.sprite.Sprite):
     def events(self, event):
         "Tracks events specific to the Developer class"
         match event.type:
-            case pygame.KEYDOWN:
+            # - Event '768' is 'pygame.KEYDOWN'
+            case 768:
                 match event.key:
                     case 96:
                         self.visible = False if self.visible else True

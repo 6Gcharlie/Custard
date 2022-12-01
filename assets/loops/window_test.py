@@ -4,9 +4,11 @@ The window test is a game loop for testing development features coming to the cu
 # - Modules necessary for testing operation
 import os
 import pygame
-from assets.modules.developer import Developer
 from assets.modules.pause import Pause
+from assets.modules.developer import Developer
 from assets.scripts.cube import Cube
+
+
 
 # - This loop is used for testing the responsiveness of the game window
 def test_environment(game):
@@ -39,6 +41,7 @@ def test_environment(game):
             pause_obj.events(event, game)
 
             if not game.paused and not racing:
+                # - Event '768' is 'pygame.KEYDOWN'
                 if event.type == 768 and event.key == 13:
                     racing = True
 
