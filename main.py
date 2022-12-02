@@ -1,10 +1,8 @@
 """
 main.py is the executable file for the game being created, run this to run the game
 """
-# - Import all necessary modules
 import pygame
-from assets.modules.custard import Application
-from assets.loops.window_test import test_environment
+from assets import Application, test_environment
 
 # - Initialise modules
 pygame.font.init()
