@@ -4,11 +4,7 @@ The window test is a game loop for testing development features coming to the cu
 # - Modules necessary for testing operation
 import os
 import pygame
-from assets.modules.pause import Pause
-from assets.modules.developer import Developer
-from assets.scripts.cube import Cube
-
-
+from assets import Pause, Developer, Cube
 
 # - This loop is used for testing the responsiveness of the game window
 def test_environment(game):
