@@ -18,7 +18,7 @@ class Application(pygame.sprite.Sprite):
         self.paused = attributes['paused']
         self.clock = attributes['clock']
         self.surface = attributes['surface']
-        self.fullscreen = False
+        self.fullscreen = attributes['fullscreen']
 
         # - Define dynamic attributes
         self.fps = attributes['fps']
@@ -33,19 +33,23 @@ class Application(pygame.sprite.Sprite):
 
         # - 'DOUBLEBUF' is equal to '1073741824'
         # - 'HWSURFACE' is equal to '1'
-        self.flags = 1073741824 | 1
+        self.flags = attributes['flags']
 
         # - Game volume dynamic attribute
-        self.master_volume = 100
-        self.music_volume = 100
-        self.sound_volume = 100
-        self.voices_volume = 100
+        self.volume = {
+            'master' : attributes['volume']['master'],
+            'music'  : attributes['volume']['music'],
+            'sound'  : attributes['volume']['sound'],
+            'voices' : attributes['volume']['voices']
+        }
 
         # - Game colour tuple attribute
-        self.midnight_colour = [ 48,  44,  46]
-        self.slate_colour    = [ 90,  83,  83]
-        self.marble_colour   = [125, 113, 122]
-        self.butter_colour   = [255, 245, 100]
+        self.colour = {
+            'midnight' : attributes['colour']['midnight'],
+            'slate'    : attributes['colour']['slate'],
+            'marble'   : attributes['colour']['marble'],
+            'butter'   : attributes['colour']['butter']
+        }
 
         # - Delta time attributes
         self.prev_time = time.time()
