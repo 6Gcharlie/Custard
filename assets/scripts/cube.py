@@ -8,7 +8,7 @@ class Cube(pygame.sprite.Sprite):
     def __init__(self, game, speed, coords):
         self.speed = speed
         self.image = pygame.Surface([50, 50])
-        self.image.fill(game.marble_colour)
+        self.image.fill(game.colour['marble'])
         self.coord_x = coords[0]
         self.coord_y = coords[1]
 

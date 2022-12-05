@@ -14,10 +14,18 @@ pygame.display.init()
 application_attributes = {
                             'running': True, 'paused': False,
                             'clock': pygame.time.Clock(), 'surface': None,
-                            'fps': 60, 'loop': 'window test', 'tick': 'loose',
-                            'path': 'assets/original/', 'tex_id': None,
+                            'fullscreen': False, 'fps': 60, 'loop': 'window test',
+                            'tick': 'loose', 'path': 'assets/original/', 'tex_id': None,
                             'vsync': False, 'dimensions': [1280, 720],
-                            'type': 'OpenGL'
+                            'type': 'OpenGL', 'flags': 1073741824 | 1,
+                            'volume': {
+                                        'master' : 100, 'music'  : 100,
+                                        'sound'  : 100, 'voices' : 100
+                                      },
+                            'colour': {
+                                        'midnight' : [ 48,  44,  46], 'slate'  : [ 90,  83,  83],
+                                        'marble'   : [125, 113, 122], 'butter' : [255, 245, 100]
+                                      }
                          }
 
 # - Create game object
