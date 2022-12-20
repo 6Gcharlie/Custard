@@ -30,7 +30,7 @@ application_attributes = {
 
 # - Create game object
 game = Application(application_attributes)
-game.set_game_surface('Stone Heart')
+game.set_game_surface('Window test')
 
 
 
