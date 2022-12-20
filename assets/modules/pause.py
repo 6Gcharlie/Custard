@@ -75,7 +75,7 @@ class Pause(pygame.sprite.Sprite):
                                 case 0:
                                     self.close_menu(game)
                                 case 1:
-                                    game.restart()
+                                    game.reset()
                                 case 2:
                                     game.set_fps(15)
                                 case 3:
