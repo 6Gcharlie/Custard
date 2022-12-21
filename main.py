@@ -8,16 +8,26 @@ from assets import Application, test_environment
 pygame.font.init()
 pygame.display.init()
 
+RENDER = 'OpenGL'
 
+SDL_FLAGS = 512
+OPENGL_FLAGS = 1073741824 | 1
 
 # - Set dynamic attributes for the 'Application' class
 application_attributes = {
-                            'running': True, 'paused': False,
-                            'clock': pygame.time.Clock(), 'surface': None,
-                            'fullscreen': False, 'fps': 60, 'loop': 'window test',
-                            'tick': 'loose', 'path': 'assets/original/', 'tex_id': None,
-                            'vsync': False, 'dimensions': [1280, 720],
-                            'type': 'OpenGL', 'flags': 1073741824 | 1,
+                            'running': True,
+                            'paused': False,
+                            'clock': pygame.time.Clock(),
+                            'fullscreen': False,
+                            'fps': 60,
+                            'loop': 'window test',
+                            'tick': 'loose',
+                            'path': 'assets/original/',
+                            'tex_id': None,
+                            'vsync': False,
+                            'dimensions': [1280, 720],
+                            'type': RENDER,
+                            'flags': OPENGL_FLAGS if RENDER == 'OpenGL' else SDL_FLAGS,
                             'volume': {
                                         'master' : 100, 'music'  : 100,
                                         'sound'  : 100, 'voices' : 100

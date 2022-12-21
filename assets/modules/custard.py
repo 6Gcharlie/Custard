@@ -16,8 +16,10 @@ class Application(pygame.sprite.Sprite):
         # - Default attributes
         self.default = attributes
 
+        # - Create window attribute
+        self.surface = None
+
         # - Define static attribute
-        self.surface = self.default['surface']
         self.running = self.default['running']
         self.paused = self.default['paused']
         self.clock = self.default['clock']
@@ -85,6 +87,8 @@ class Application(pygame.sprite.Sprite):
         if self.type == 'OpenGL':
             custard_opengl_blit(self.surface, self.tex_id)
             pygame.display.flip()
+        else:
+            pygame.display.update()
 
 
 
@@ -102,7 +106,6 @@ class Application(pygame.sprite.Sprite):
         self.loop = self.default['loop']
         self.tick = self.default['tick']
         self.path = self.default['path']
-        self.tex_id = self.default['tex_id']
         self.vsync = self.default['vsync']
         self.width = self.default['dimensions'][0]
         self.height = self.default['dimensions'][1]
@@ -128,6 +131,8 @@ class Application(pygame.sprite.Sprite):
             'butter'   : self.default['colour']['butter']
         }
 
+        self.loop = "restart"
+
 
 
     # - Exit the application
@@ -149,6 +154,9 @@ class Application(pygame.sprite.Sprite):
             self.tex_id = gl.glGenTextures(1)
             self.surface = pygame.Surface([self.width, self.height])
             pygame.display.set_caption(caption)
+        else:
+            self.surface = pygame.display.set_mode([self.width, self.height], self.flags, self.vsync)
+            pygame.display.set_caption(caption)
 
 
 
@@ -168,11 +176,12 @@ class Application(pygame.sprite.Sprite):
                 else:
                     self.surface.fill([55,  55,  55])
                     tick_length = str(len(tick_list))
-                    text = font.render('Get FPS: ' + tick_length + '/200', True, self.slate_colour)
+                    text = font.render('Get FPS: ' + tick_length + '/200', True, self.colour['slate'])
                     text_w, text_h = text.get_size()
                     screen_center = [self.width / 2 - text_w / 2, self.height / 2 - text_h / 2]
                     self.surface.blit(text, screen_center)
-                    custard_opengl_blit(self.surface, self.tex_id)
+                    if self.type == 'OpenGL':
+                        custard_opengl_blit(self.surface, self.tex_id)
                     pygame.display.flip()
                     self.clock.tick()
 
@@ -182,10 +191,10 @@ class Application(pygame.sprite.Sprite):
         "Toggles fullscreen for the game"
         if fullscreen:
             self.fullscreen = True
-            self.flags = -2147483648 | 1073741824 | 1
+            self.flags = -2147483648 | self.default['flags']
         else:
             self.fullscreen = False
-            self.flags = 1073741824 | 1
+            self.flags = self.default['flags']
 
         self.set_game_surface('Stone heart')
 
