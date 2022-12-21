@@ -8,7 +8,7 @@ from assets import Application, test_environment
 pygame.font.init()
 pygame.display.init()
 
-RENDER = 'OpenGL'
+RENDER = 'SDL'
 
 SDL_FLAGS = 512
 OPENGL_FLAGS = 1073741824 | 1

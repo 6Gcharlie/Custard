@@ -155,7 +155,8 @@ class Application(pygame.sprite.Sprite):
             self.surface = pygame.Surface([self.width, self.height])
             pygame.display.set_caption(caption)
         else:
-            self.surface = pygame.display.set_mode([self.width, self.height], self.flags, self.vsync)
+            surface = pygame.display.set_mode([self.width, self.height], self.flags, self.vsync)
+            self.surface = surface
             pygame.display.set_caption(caption)
 
 
@@ -166,6 +167,8 @@ class Application(pygame.sprite.Sprite):
         dynamic_font_size = int(round(self.width / 80, 0))
         font = pygame.font.Font(os.path.join(self.path + 'fonts/pcsenior.ttf'), dynamic_font_size)
         tick_list = []
+
+        # - While the clock is being set:
         while setting_clock:
             if self.clock.get_fps != 0.0:
                 tick_list.append(self.clock.get_fps())
@@ -175,14 +178,16 @@ class Application(pygame.sprite.Sprite):
                     setting_clock = False
                 else:
                     self.surface.fill([55,  55,  55])
-                    tick_length = str(len(tick_list))
-                    text = font.render('Get FPS: ' + tick_length + '/200', True, self.colour['slate'])
+                    tick_len = str(len(tick_list))
+                    text = font.render('Get FPS: ' + tick_len + '/200', True, self.colour['slate'])
                     text_w, text_h = text.get_size()
                     screen_center = [self.width / 2 - text_w / 2, self.height / 2 - text_h / 2]
                     self.surface.blit(text, screen_center)
                     if self.type == 'OpenGL':
                         custard_opengl_blit(self.surface, self.tex_id)
-                    pygame.display.flip()
+                        pygame.display.flip()
+                    else:
+                        pygame.display.update()
                     self.clock.tick()
 
 
