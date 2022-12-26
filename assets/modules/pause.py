@@ -31,7 +31,6 @@ class Pause(pygame.sprite.Sprite):
         self.names.append('15 FPS')
         self.names.append('30 FPS')
         self.names.append('60 FPS')
-        self.names.append('Dynamic FPS')
         self.names.append('No FPS cap')
         self.names.append('Reinstate cap')
         self.names.append('Fullscreen')
@@ -83,12 +82,10 @@ class Pause(pygame.sprite.Sprite):
                                 case 4:
                                     game.set_fps(60)
                                 case 5:
-                                    game.set_dynamic_fps()
-                                case 6:
                                     game.set_tick('NA')
-                                case 7:
+                                case 6:
                                     game.set_tick('loose')
-                                case 8:
+                                case 7:
                                     if game.fullscreen:
                                         game.set_fullscreen(False)
                                     else:
