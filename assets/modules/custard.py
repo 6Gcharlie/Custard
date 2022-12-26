@@ -2,7 +2,6 @@
 The custard module is used to manage all game related functions and data.
 """
 # - Standard module imports should be placed before new import installs
-import os
 import time
 import pygame
 import OpenGL.GL as gl
@@ -75,8 +74,6 @@ class Application(pygame.sprite.Sprite):
                 match event.key:
                     case 27:
                         self.paused = False if self.paused else True
-                    case 48:
-                        self.set_dynamic_fps()
                     case _:
                         print('Key pressed: ' + str(event.key))
 
@@ -155,35 +152,9 @@ class Application(pygame.sprite.Sprite):
             self.surface = pygame.Surface([self.width, self.height])
             pygame.display.set_caption(caption)
         else:
-            self.surface = pygame.display.set_mode([self.width, self.height], self.flags, self.vsync)
+            surface = pygame.display.set_mode([self.width, self.height], self.flags, self.vsync)
+            self.surface = surface
             pygame.display.set_caption(caption)
-
-
-
-    def set_dynamic_fps(self):
-        "Counts to 200 rapidly; Then it will take the mean average speed and set it as an FPS cap"
-        setting_clock = True
-        dynamic_font_size = int(round(self.width / 80, 0))
-        font = pygame.font.Font(os.path.join(self.path + 'fonts/pcsenior.ttf'), dynamic_font_size)
-        tick_list = []
-        while setting_clock:
-            if self.clock.get_fps != 0.0:
-                tick_list.append(self.clock.get_fps())
-                if len(tick_list) == 200:
-                    tick_list.sort()
-                    self.fps = int(round(tick_list[25], 0) - 30)
-                    setting_clock = False
-                else:
-                    self.surface.fill([55,  55,  55])
-                    tick_length = str(len(tick_list))
-                    text = font.render('Get FPS: ' + tick_length + '/200', True, self.colour['slate'])
-                    text_w, text_h = text.get_size()
-                    screen_center = [self.width / 2 - text_w / 2, self.height / 2 - text_h / 2]
-                    self.surface.blit(text, screen_center)
-                    if self.type == 'OpenGL':
-                        custard_opengl_blit(self.surface, self.tex_id)
-                    pygame.display.flip()
-                    self.clock.tick()
 
 
 
