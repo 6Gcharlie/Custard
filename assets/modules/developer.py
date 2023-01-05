@@ -11,8 +11,8 @@ class Developer(pygame.sprite.Sprite):
         self.visible = False
         self.window_width = game.width
         self.window_height = game.height
-        self.text_colour = game.colour['slate']
-        self.background_colour = game.colour['midnight']
+        self.text_colour = game.colour[1]
+        self.background_colour = game.colour[0]
         font_size = int(round(game.width / 128, 0))
         self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), font_size)
         self.image = pygame.Surface([game.width / 4, game.height / 2])

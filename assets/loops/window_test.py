@@ -23,8 +23,8 @@ def test_environment(game):
     timer = 0
     font_size = int(round(game.width / 80, 0))
     font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), font_size)
-    text_1 = font.render('Press [Enter] to start the race', True, game.colour['marble'])
-    text_2 = font.render('!!!', True, game.colour['marble'])
+    text_1 = font.render('Press [Enter] to start the race', True, game.colour[2])
+    text_2 = font.render('!!!', True, game.colour[2])
 
     while game.loop == 'window test':
         # - Delta time ticker
@@ -52,20 +52,20 @@ def test_environment(game):
             timer += game.delta_time
             if cube_one.coord_x < game.width - 150:
                 cube_one.update(game)
-                text_2 = font.render('Cube 2: ' + str(round(timer, 2)), True, game.colour['marble'])
+                text_2 = font.render('Cube 2: ' + str(round(timer, 2)), True, game.colour[2])
             if cube_two.coord_x < game.width - 150:
                 cube_two.update(game)
-                text_1 = font.render('Cube 1: ' + str(round(timer, 2)), True, game.colour['marble'])
+                text_1 = font.render('Cube 1: ' + str(round(timer, 2)), True, game.colour[2])
 
 
 
         # - Apply all normal pygame functions to the offscreen_surface
-        game.surface.fill(game.colour['slate'])
+        game.surface.fill(game.colour[1])
         game.surface.blit(text_2, [50, game.height / 4 * 3])
         game.surface.blit(text_1, [50, game.height / 4 * 3 - 20])
         cube_one.draw(game)
         cube_two.draw(game)
-        pygame.draw.line(game.surface, game.colour['midnight'], line_coords[0], line_coords[1], 2)
+        pygame.draw.line(game.surface, game.colour[0], line_coords[0], line_coords[1], 2)
 
         # - Draw the screen
         developer_obj.draw(game.surface)
