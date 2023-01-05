@@ -22,7 +22,7 @@ class Pause(pygame.sprite.Sprite):
         self.row_height = int(round(game.height / 18, 0))
 
         # - Create information to be rendered
-        self.title = self.font.render('Game paused', True, game.colour['slate'])
+        self.title = self.font.render('Game paused', True, game.colour[1])
 
         # WARNING : resume must always be the FIRST item, and exit must be the LAST
         self.names = []
@@ -42,16 +42,16 @@ class Pause(pygame.sprite.Sprite):
         self.options = []
         for name in self.names:
             if self.counter == 0:
-                self.options.append(self.font.render(' > ' + name, True, game.colour['butter']))
+                self.options.append(self.font.render(' > ' + name, True, game.colour[3]))
             else:
-                self.options.append(self.font.render('   ' + name, True, game.colour['slate']))
+                self.options.append(self.font.render('   ' + name, True, game.colour[1]))
             self.counter += 1
 
         # - Reset counter to 0
         self.counter = 0
 
         # - Draw details
-        self.image.fill(game.colour['marble'])
+        self.image.fill(game.colour[2])
         self.image.blit(self.title, [2, 2])
 
         for option in self.options:
@@ -117,15 +117,15 @@ class Pause(pygame.sprite.Sprite):
     def update(self, game):
         "This method updates the surface with new information when change is detected"
         if (self.flag and self.visible):
-            self.image.fill(game.colour['marble'])
+            self.image.fill(game.colour[2])
             self.image.blit(self.title, [2, 2])
 
             for option in self.options:
                 value = self.names[self.counter]
                 if self.counter == self.option_selected:
-                    option = self.font.render(' > ' + value, True, game.colour['butter'])
+                    option = self.font.render(' > ' + value, True, game.colour[3])
                 else:
-                    option = self.font.render('   ' + value, True, game.colour['slate'])
+                    option = self.font.render('   ' + value, True, game.colour[1])
 
                 self.image.blit(option, [2, self.row_height])
                 self.row_height += int(round(game.height / 36, 0))

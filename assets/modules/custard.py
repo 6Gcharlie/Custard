@@ -11,7 +11,7 @@ import OpenGL.GL as gl
 class Application(pygame.sprite.Sprite):
     "The Application class is used for general window data/functionality"
     # - Initialise the object
-    def __init__(self, attributes):
+    def __init__(self, attributes, volumes, colours):
         # - Default attributes
         self.default = attributes
 
@@ -19,41 +19,53 @@ class Application(pygame.sprite.Sprite):
         self.surface = None
 
         # - Define static attribute
-        self.running = self.default['running']
-        self.paused = self.default['paused']
-        self.clock = self.default['clock']
+        self.running    = self.default['running']
+        self.paused     = self.default['paused']
+        self.clock      = self.default['clock']
         self.fullscreen = self.default['fullscreen']
 
         # - Define dynamic attributes
-        self.fps = self.default['fps']
-        self.loop = self.default['loop']
-        self.tick = self.default['tick']
-        self.path = self.default['path']
+        self.fps    = self.default['fps']
+        self.loop   = self.default['loop']
+        self.tick   = self.default['tick']
+        self.path   = self.default['path']
         self.tex_id = self.default['tex_id']
-        self.vsync = self.default['vsync']
-        self.width = self.default['dimensions'][0]
+        self.vsync  = self.default['vsync']
+        self.width  = self.default['dimensions'][0]
         self.height = self.default['dimensions'][1]
-        self.type = self.default['type']
+        self.type   = self.default['type']
 
         # - 'DOUBLEBUF' is equal to '1073741824'
         # - 'HWSURFACE' is equal to '1'
         self.flags = self.default['flags']
 
         # - Game volume dynamic attribute
-        self.volume = {
-            'master' : self.default['volume']['master'],
-            'music'  : self.default['volume']['music'],
-            'sound'  : self.default['volume']['sound'],
-            'voices' : self.default['volume']['voices']
-        }
+        if volumes:
+            self.volume = {
+                'master' : volumes['master'],
+                'music'  : volumes['music'],
+                'sound'  : volumes['sound'],
+                'voices' : volumes['voices']
+            }
+        else:
+            self.volume = {
+                'master' : 100,
+                'music'  : 100,
+                'sound'  : 100,
+                'voices' : 100
+            }
 
         # - Game colour tuple attribute
-        self.colour = {
-            'midnight' : self.default['colour']['midnight'],
-            'slate'    : self.default['colour']['slate'],
-            'marble'   : self.default['colour']['marble'],
-            'butter'   : self.default['colour']['butter']
-        }
+        if colours:
+            self.colour = [
+                colours[0], colours[1],
+                colours[2], colours[3]
+            ]
+        else:
+            self.colour = [
+                [ 48,  44,  46], [ 90,  83,  83],
+                [125, 113, 122], [255, 245, 100]
+            ]
 
         # - Delta time attributes
         self.prev_time = time.time()
@@ -111,22 +123,6 @@ class Application(pygame.sprite.Sprite):
         # - 'DOUBLEBUF' is equal to '1073741824'
         # - 'HWSURFACE' is equal to '1'
         self.flags = self.default['flags']
-
-        # - Game volume dynamic attribute
-        self.volume = {
-            'master' : self.default['volume']['master'],
-            'music'  : self.default['volume']['music'],
-            'sound'  : self.default['volume']['sound'],
-            'voices' : self.default['volume']['voices']
-        }
-
-        # - Game colour tuple attribute
-        self.colour = {
-            'midnight' : self.default['colour']['midnight'],
-            'slate'    : self.default['colour']['slate'],
-            'marble'   : self.default['colour']['marble'],
-            'butter'   : self.default['colour']['butter']
-        }
 
         self.loop = "restart"
 
