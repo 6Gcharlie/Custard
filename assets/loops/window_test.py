@@ -2,7 +2,6 @@
 The window test is a game loop for testing development features coming to the custard class
 """
 # - Modules necessary for testing operation
-import os
 import pygame
 from assets import Pause, Developer, Cube
 
@@ -22,7 +21,7 @@ def test_environment(game):
     racing = False
     timer = 0
     font_size = int(round(game.width / 80, 0))
-    font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), font_size)
+    font = pygame.font.Font(pygame.font.get_default_font(), font_size)
     text_1 = font.render('Press [Enter] to start the race', True, game.colour[2])
     text_2 = font.render('!!!', True, game.colour[2])
 
