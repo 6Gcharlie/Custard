@@ -1,7 +1,6 @@
 """
 The developer module tracks crutial game stats and presents them visually for debugging purposes
 """
-import os
 import pygame
 
 class Developer(pygame.sprite.Sprite):
@@ -14,7 +13,7 @@ class Developer(pygame.sprite.Sprite):
         self.text_colour = game.colour[1]
         self.background_colour = game.colour[0]
         font_size = int(round(game.width / 128, 0))
-        self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), font_size)
+        self.font = pygame.font.Font(pygame.font.get_default_font(), font_size)
         self.image = pygame.Surface([game.width / 4, game.height / 2])
         self.row_height = int(round(game.height / 18, 0))
 

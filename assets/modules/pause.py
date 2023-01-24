@@ -1,7 +1,7 @@
 """
 This module contains the pause class which provides a basic customisable pause menu
 """
-import os
+#import os
 import pygame
 
 # - Create the pause menu object
@@ -16,8 +16,9 @@ class Pause(pygame.sprite.Sprite):
         self.counter = 0
 
         # - Dynamic attributes for the pause menu
+        # - TODO : add a system to pass in a custom font file provided by the user
         font_size = int(round(game.width / 80, 0))
-        self.font = pygame.font.Font(os.path.join(game.path + 'fonts/pcsenior.ttf'), font_size)
+        self.font = pygame.font.Font(pygame.font.get_default_font(), font_size)
         self.image = pygame.Surface([game.width / 4, game.height / 2])
         self.row_height = int(round(game.height / 18, 0))
 
