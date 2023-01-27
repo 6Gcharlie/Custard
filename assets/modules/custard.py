@@ -168,7 +168,7 @@ class Application(pygame.sprite.Sprite):
 
 
     # - Method to update the screen with delta time
-    def custard_clock(self):
+    def delta_clock(self):
         "Custard clock uses delta time to update the game window"
         # - Do delta time calculations
         self.now = time.time()
