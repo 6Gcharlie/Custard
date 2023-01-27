@@ -7,13 +7,14 @@ import pygame
 # - Create the pause menu object
 class Pause(pygame.sprite.Sprite):
     "The class handles all pause related functionality and blitting"
-    def __init__(self, game):
+    def __init__(self, game, coords):
         # - Static pause menu attributes
         # - TODO : rename 'self.flag', 'self.option_selected' & 'self.option_selected'
         self.visible = False
         self.option_selected = 0
         self.flag = False
         self.counter = 0
+        self.coords = coords
 
         # - Dynamic attributes for the pause menu
         # - TODO : add a system to pass in a custom font file provided by the user
@@ -142,7 +143,7 @@ class Pause(pygame.sprite.Sprite):
     def draw(self, surface):
         "This method draws the pause menu onto the surface provided"
         if self.visible:
-            surface.blit(self.image, [0, 0])
+            surface.blit(self.image, self.coords)
 
     def close_menu(self, game):
         "This method hides the pause menu setting attributes to keep the change"
