@@ -82,7 +82,7 @@ class Developer(pygame.sprite.Sprite):
         # - Rendered information
         self.title = self.font.render('Developer Stats', True, self.text_colour)
 
-        surface = 'Surface:      ' + game.type
+        surface = 'Surface:      ' + game.renderer
         clock   = 'Clock:        ' + game.tick
         vsync   = 'Vsync:        ' + str(game.vsync)
         width   = 'Width:        ' + str(game.width)

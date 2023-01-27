@@ -21,12 +21,12 @@ application_attributes = {
     'fullscreen': False,
     'fps': 60,
     'loop': 'window test',
-    'tick': 'loose',
+    'tick': 'NA',
     'path': 'assets/original/',
     'tex_id': None,
     'vsync': False,
     'dimensions': [1280, 720],
-    'type': RENDER,
+    'renderer': RENDER,
     'flags': OPENGL_FLAGS if RENDER == 'OpenGL' else SDL_FLAGS,
 }
 
