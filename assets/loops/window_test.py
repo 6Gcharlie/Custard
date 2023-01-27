@@ -26,8 +26,8 @@ def test_environment(game):
     text_2 = font.render('!!!', True, game.colour[2])
 
     while game.loop == 'window test':
-        # - Delta time ticker
-        game.custard_clock()
+        # - Delta time clock
+        game.delta_clock()
 
         # - Events are caught and processed here
         for event in pygame.event.get():
