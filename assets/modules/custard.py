@@ -33,7 +33,7 @@ class Application(pygame.sprite.Sprite):
         self.vsync  = self.default['vsync']
         self.width  = self.default['dimensions'][0]
         self.height = self.default['dimensions'][1]
-        self.type   = self.default['type']
+        self.renderer   = self.default['renderer']
 
         # - 'DOUBLEBUF' is equal to '1073741824'
         # - 'HWSURFACE' is equal to '1'
@@ -75,7 +75,7 @@ class Application(pygame.sprite.Sprite):
 
 
     def events(self, event):
-        "The events method is resposible for the event listeners for the application class"
+        "The events method is responsible for the event listeners for the application class"
         match event.type:
             # - Event '256' is 'pygame.QUIT'
             case 256:
@@ -93,7 +93,7 @@ class Application(pygame.sprite.Sprite):
 
     def draw(self):
         "This method draws the application surface to the window"
-        if self.type == 'OpenGL':
+        if self.renderer == 'OpenGL':
             custard_opengl_blit(self.surface, self.tex_id)
             pygame.display.flip()
         else:
@@ -118,7 +118,7 @@ class Application(pygame.sprite.Sprite):
         self.vsync = self.default['vsync']
         self.width = self.default['dimensions'][0]
         self.height = self.default['dimensions'][1]
-        self.type = self.default['type']
+        self.renderer = self.default['renderer']
 
         # - 'DOUBLEBUF' is equal to '1073741824'
         # - 'HWSURFACE' is equal to '1'
@@ -139,7 +139,7 @@ class Application(pygame.sprite.Sprite):
     # - Method to create a surface
     def set_game_surface(self, caption):
         "This method creates the window & window surface for graphics to be drawn onto"
-        if self.type == 'OpenGL':
+        if self.renderer == 'OpenGL':
             # - 'pygame.OPENL' is equal to '2' as a flag
             pygame.display.set_mode([self.width, self.height], 2 | self.flags, self.vsync)
             info = pygame.display.Info()
