@@ -11,7 +11,7 @@ def test_environment(game):
     # - Create a variable for time keeping
     game.get_prev_time()
     developer_obj = Developer(game)
-    pause_obj = Pause(game)
+    pause_obj = Pause(game, [4, 4])
 
     line_coords = [game.width - 150, 590], [game.width - 150, 690]
 
