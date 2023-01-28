@@ -9,37 +9,37 @@ import OpenGL.GL as gl
 
 
 class Application(pygame.sprite.Sprite):
-    "The Application class is used for general window data/functionality"
-    # - Initialise the object
+    "The Application class contains window generation data and functionality"
     def __init__(self, attributes, volumes, colours):
         # - Default attributes
         self.default = attributes
 
-        # - Create window attribute
+        # - Create window attribute in case of SDL 2 renderer
         self.surface = None
 
-        # - Define static attribute
+        # - Define attributes that rarely change
         self.running    = self.default['running']
         self.paused     = self.default['paused']
         self.clock      = self.default['clock']
         self.fullscreen = self.default['fullscreen']
 
-        # - Define dynamic attributes
-        self.fps    = self.default['fps']
-        self.loop   = self.default['loop']
-        self.tick   = self.default['tick']
-        self.path   = self.default['path']
-        self.tex_id = self.default['tex_id']
-        self.vsync  = self.default['vsync']
-        self.width  = self.default['dimensions'][0]
-        self.height = self.default['dimensions'][1]
+        # - Define attributes the user has more influence over
+        self.fps        = self.default['fps']
+        self.loop       = self.default['loop']
+        self.tick       = self.default['tick']
+        self.path       = self.default['path']
+        self.tex_id     = self.default['tex_id']
+        self.vsync      = self.default['vsync']
+        self.width      = self.default['dimensions'][0]
+        self.height     = self.default['dimensions'][1]
         self.renderer   = self.default['renderer']
 
-        # - 'DOUBLEBUF' is equal to '1073741824'
-        # - 'HWSURFACE' is equal to '1'
+        # - 'DOUBLEBUF' flag is equal to '1073741824'
+        # - 'HWSURFACE' flag is equal to '1'
+        # - 'RESIZE'    flag is equal to '512'
         self.flags = self.default['flags']
 
-        # - Game volume dynamic attribute
+        # - Game volume attributes if any are set
         if volumes:
             self.volume = {
                 'master' : volumes['master'],
@@ -55,7 +55,7 @@ class Application(pygame.sprite.Sprite):
                 'voices' : 100
             }
 
-        # - Game colour tuple attribute
+        # - Game colour attribute if any are set
         if colours:
             self.colour = [
                 colours[0], colours[1],
@@ -68,14 +68,14 @@ class Application(pygame.sprite.Sprite):
             ]
 
         # - Delta time attributes
-        self.prev_time = time.time()
+        self.prev_time  = time.time()
         self.now = time.time()
         self.delta_time = self.now - self.prev_time
 
 
 
     def events(self, event):
-        "The events method is responsible for the event listeners for the application class"
+        "The events method contains event listeners for the Application class"
         match event.type:
             # - Event '256' is 'pygame.QUIT'
             case 256:
@@ -92,7 +92,7 @@ class Application(pygame.sprite.Sprite):
 
 
     def draw(self):
-        "This method draws the application surface to the window"
+        "This method draws the Application surface to the window"
         if self.renderer == 'OpenGL':
             custard_opengl_blit(self.surface, self.tex_id)
             pygame.display.flip()
@@ -105,25 +105,27 @@ class Application(pygame.sprite.Sprite):
     def reset(self):
         "Set default attributes"
         # - Define static attribute
-        self.running = self.default['running']
-        self.paused = self.default['paused']
-        self.clock = self.default['clock']
+        self.running    = self.default['running']
+        self.paused     = self.default['paused']
+        self.clock      = self.default['clock']
         self.fullscreen = self.default['fullscreen']
 
         # - Define dynamic attributes
-        self.fps = self.default['fps']
-        self.loop = self.default['loop']
-        self.tick = self.default['tick']
-        self.path = self.default['path']
-        self.vsync = self.default['vsync']
-        self.width = self.default['dimensions'][0]
-        self.height = self.default['dimensions'][1]
-        self.renderer = self.default['renderer']
+        self.fps        = self.default['fps']
+        self.loop       = self.default['loop']
+        self.tick       = self.default['tick']
+        self.path       = self.default['path']
+        self.vsync      = self.default['vsync']
+        self.width      = self.default['dimensions'][0]
+        self.height     = self.default['dimensions'][1]
+        self.renderer   = self.default['renderer']
 
         # - 'DOUBLEBUF' is equal to '1073741824'
         # - 'HWSURFACE' is equal to '1'
+        # - 'RESIZE'    flag is equal to '512'
         self.flags = self.default['flags']
 
+        # - Restart the loop
         self.loop = "restart"
 
 
