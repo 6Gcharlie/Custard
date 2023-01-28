@@ -1,5 +1,5 @@
 """
-Test __init__ file! Hopefully this works!
+This directory contains a range of modules, scripts, and loops for applications
 """
 # - Asset modules
 from .modules import Pause
