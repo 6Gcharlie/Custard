@@ -86,6 +86,11 @@ class Application(pygame.sprite.Sprite):
                 match event.key:
                     case 27:
                         self.paused = False if self.paused else True
+                    case 1073741892:
+                        if self.fullscreen:
+                            self.set_fullscreen(False)
+                        else:
+                            self.set_fullscreen(True)
                     case _:
                         print('Key pressed: ' + str(event.key))
 

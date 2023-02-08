@@ -8,6 +8,8 @@ from .modules import Application
 
 # - Asset scripts
 from .scripts import Cube
+from .scripts import Player
 
 # - Game loops
 from .loops import test_environment
+from .loops import backrooms
