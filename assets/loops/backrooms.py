@@ -7,7 +7,7 @@ Temporary placeholder will eventually encompass:
  - Pong.
 """
 import pygame
-from assets import Pause, Developer, Player
+from assets import Pause, Developer, Player, Gui
 
 def backrooms(game):
     "Temporary placeholder"
@@ -21,6 +21,7 @@ def backrooms(game):
     pygame.display.set_caption("The backrooms")
 
     player = Player(100, [game.width / 2 - 30, game.height / 2 - 30])
+    gui    = Gui()
 
     while game.loop == 'backrooms':
         # - Delta time clock
@@ -28,19 +29,25 @@ def backrooms(game):
 
         # - Events are caught and processed here
         for event in pygame.event.get():
+            if not pause_obj.visible:
+                player.events(event)
+
             game.events(event)
-            player.events(event)
             developer_obj.events(event)
             pause_obj.events(event, game)
 
         # - Game logic is processed here
-        player.update(game)
+        if not pause_obj.visible:
+            player.update(game)
+            gui.update(player)
+
         developer_obj.update(game)
         pause_obj.update(game)
 
         # - Apply all normal pygame functions to the offscreen_surface
         game.surface.fill(game.colour[1])
         player.draw(game)
+        gui.draw(game)
 
         # - Draw the screen
         developer_obj.draw(game.surface)

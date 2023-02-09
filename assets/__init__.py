@@ -9,6 +9,7 @@ from .modules import Application
 # - Asset scripts
 from .scripts import Cube
 from .scripts import Player
+from .scripts import Gui
 
 # - Game loops
 from .loops import test_environment
