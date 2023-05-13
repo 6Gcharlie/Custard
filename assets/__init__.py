@@ -1,10 +1,10 @@
 """
-This directory contains a range of modules, scripts, and loops for applications
+This directory contains a range of modules, scripts, and loops for Windows
 """
 # - Asset modules
 from .modules import Pause
 from .modules import Developer
-from .modules import Application
+from .modules import Window
 
 # - Asset scripts
 from .scripts import Cube
@@ -13,4 +13,3 @@ from .scripts import Gui
 
 # - Game loops
 from .loops import test_environment
-from .loops import backrooms

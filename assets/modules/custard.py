@@ -8,8 +8,8 @@ import OpenGL.GL as gl
 
 
 
-class Application(pygame.sprite.Sprite):
-    "The Application class contains window generation data and functionality"
+class Window(pygame.sprite.Sprite):
+    "The Window class contains window generation data and functionality"
     def __init__(self, attributes, volumes, colours):
         # - Default attributes
         self.default = attributes
@@ -75,7 +75,7 @@ class Application(pygame.sprite.Sprite):
 
 
     def events(self, event):
-        "The events method contains event listeners for the Application class"
+        "The events method contains event listeners for the Window class"
         match event.type:
             # - Event '256' is 'pygame.QUIT'
             case 256:
@@ -97,7 +97,7 @@ class Application(pygame.sprite.Sprite):
 
 
     def draw(self):
-        "This method draws the Application surface to the window"
+        "This method draws the Window surface to the window"
         if self.renderer == 'OpenGL':
             custard_opengl_blit(self.surface, self.tex_id)
             pygame.display.flip()
@@ -106,7 +106,7 @@ class Application(pygame.sprite.Sprite):
 
 
 
-    # - Restart the application
+    # - Restart the Window
     def reset(self):
         "Set default attributes"
         # - Define static attribute
@@ -135,7 +135,7 @@ class Application(pygame.sprite.Sprite):
 
 
 
-    # - Exit the application
+    # - Exit the Window
     def exit(self):
         "This method ends the game and closes the window"
         self.running = False
