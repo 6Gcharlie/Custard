@@ -1,6 +1,6 @@
 """
 Another test __init__ document, fingers crossed! :O
 """
-from .custard import Application
+from .custard import Window
 from .developer import Developer
 from .pause import Pause
